@@ -1,0 +1,24 @@
+# Python
+__pycache__/
+*.py[cod]
+.venv/
+venv/
+.ipynb_checkpoints/
+
+# OS / editors
+.DS_Store
+.vscode/
+.idea/
+
+# ML pipeline: large or reproducible artefacts
+# (raw ECG databases are downloaded automatically from PhysioNet)
+ml-pipeline/data/raw/ecg/
+ml-pipeline/data/raw/ecg_zip/
+ml-pipeline/data/processed/
+ml-pipeline/outputs/*_fast/
+ml-pipeline/outputs/*.log
+ml-pipeline/outputs/*/tables/oof_predictions.csv
+ml-pipeline/outputs/*/tables/split_assignment.csv
+
+# Web app: local patient history
+web-app/data/
