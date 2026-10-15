@@ -1,0 +1,29 @@
+[theme]
+base = "light"
+primaryColor = "#2563EB"
+backgroundColor = "#FFFFFF"
+secondaryBackgroundColor = "#F1F5F9"
+textColor = "#0F172A"
+borderColor = "#E2E8F0"
+linkColor = "#2563EB"
+font = "Inter:https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap, sans-serif"
+headingFontWeights = [700, 700, 650, 600, 600, 600]
+baseRadius = "0.75rem"
+buttonRadius = "0.6rem"
+showWidgetBorder = true
+greenColor = "#16A34A"
+orangeColor = "#D97706"
+redColor = "#DC2626"
+blueColor = "#2563EB"
+
+[theme.sidebar]
+backgroundColor = "#F8FAFC"
+
+[client]
+toolbarMode = "minimal"
+
+[server]
+maxUploadSize = 100
+
+[browser]
+gatherUsageStats = false

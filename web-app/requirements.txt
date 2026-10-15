@@ -1,0 +1,10 @@
+streamlit>=1.40
+plotly>=5.24
+fpdf2>=2.8
+# same stack as the ML pipeline; scikit-learn MUST match the version that trained the models
+scikit-learn==1.9.1
+numpy>=2.0
+pandas>=2.2
+scipy>=1.13
+wfdb>=4.1
+joblib>=1.4
