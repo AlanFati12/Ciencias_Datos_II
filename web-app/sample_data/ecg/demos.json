@@ -1,0 +1,74 @@
+[
+  {
+    "file": "mitdb_100_10s.csv",
+    "fs": 360,
+    "database": "mitdb",
+    "record": "100",
+    "start_s": 10.0,
+    "seconds": 120,
+    "annotated_beats": {
+      "N": 148,
+      "S": 0,
+      "V": 0,
+      "F": 0
+    },
+    "title_en": "Normal rhythm",
+    "title_es": "Ritmo normal",
+    "description_en": "Regular heartbeat with normal beats. Useful as a reference.",
+    "description_es": "Latidos regulares y normales. Sirve como referencia."
+  },
+  {
+    "file": "mitdb_119_1360s.csv",
+    "fs": 360,
+    "database": "mitdb",
+    "record": "119",
+    "start_s": 1360.0,
+    "seconds": 120,
+    "annotated_beats": {
+      "N": 85,
+      "S": 0,
+      "V": 47,
+      "F": 0
+    },
+    "title_en": "Ventricular bigeminy",
+    "title_es": "Bigeminismo ventricular",
+    "description_en": "A normal beat alternates with a premature ventricular beat.",
+    "description_es": "Un latido normal se alterna con un latido ventricular prematuro."
+  },
+  {
+    "file": "mitdb_106_740s.csv",
+    "fs": 360,
+    "database": "mitdb",
+    "record": "106",
+    "start_s": 740.0,
+    "seconds": 120,
+    "annotated_beats": {
+      "N": 81,
+      "S": 0,
+      "V": 81,
+      "F": 0
+    },
+    "title_en": "Frequent ventricular beats",
+    "title_es": "Latidos ventriculares frecuentes",
+    "description_en": "Many premature ventricular beats of different shapes.",
+    "description_es": "Muchos latidos ventriculares prematuros de distintas formas."
+  },
+  {
+    "file": "svdb_866_1280s.csv",
+    "fs": 128,
+    "database": "svdb",
+    "record": "866",
+    "start_s": 1280.0,
+    "seconds": 120,
+    "annotated_beats": {
+      "N": 120,
+      "S": 29,
+      "V": 35,
+      "F": 0
+    },
+    "title_en": "Supraventricular beats",
+    "title_es": "Latidos supraventriculares",
+    "description_en": "Early beats from the atria: they look normal but arrive too soon.",
+    "description_es": "Latidos adelantados de las aur\u00edculas: se ven normales pero llegan antes de tiempo."
+  }
+]
