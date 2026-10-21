@@ -1,0 +1,1077 @@
+{
+  "tier": "clinical",
+  "started": "2026-10-27T09:30:16",
+  "finished": "2026-10-27T09:34:34",
+  "seed": 42,
+  "environment": {
+    "python": "3.14.7",
+    "platform": "macOS-27.2-arm64-arm-64bit-Mach-O",
+    "numpy": "2.5.4",
+    "pandas": "3.1.0",
+    "scipy": "1.18.1",
+    "scikit-learn": "1.9.1",
+    "matplotlib": "3.11.2",
+    "seaborn": "0.13.2"
+  },
+  "inputs": [
+    {
+      "path": "data/raw/cardio_train.csv",
+      "description": "Kaggle Cardiovascular Disease dataset (S. Ulianova, 2019)",
+      "sha256": "21a705d23381b0dfd6a6416da701b490744f1fc3b47e9ff3db3968c420ffa10c",
+      "bytes": 2941524
+    }
+  ],
+  "params": {
+    "mode": "full",
+    "model features": [
+      "age_years",
+      "gender",
+      "height",
+      "bmi",
+      "ap_hi",
+      "ap_lo",
+      "bp_stage",
+      "cholesterol",
+      "gluc",
+      "smoke",
+      "alco",
+      "active"
+    ],
+    "Logistic Regression best hyperparameters": {
+      "C": 0.0019517224641449498
+    },
+    "K-Nearest Neighbors best hyperparameters": {
+      "weights": "uniform",
+      "p": 2,
+      "n_neighbors": 2500
+    },
+    "Random Forest best hyperparameters": {
+      "min_samples_leaf": 10,
+      "max_features": 0.5,
+      "max_depth": null
+    },
+    "Support Vector Machine best hyperparameters": {
+      "C": 0.13066739238053282,
+      "gamma": 0.029621516588303493
+    },
+    "stacking": {
+      "cv_folds": 5,
+      "meta_model": "LogisticRegression(C=1.0), weights beta_k >= 0",
+      "meta_features": [
+        "LR",
+        "KNN",
+        "RF",
+        "SVM"
+      ],
+      "referral_band": [
+        0.35,
+        0.65
+      ],
+      "grouped_cv": false
+    },
+    "meta-model weights": {
+      "intercept": -2.7160381860881513,
+      "LR": 1.2528686567635454,
+      "KNN": 0.7796103349404183,
+      "RF": 1.970432764623543,
+      "SVM": 1.549723611382434
+    },
+    "clinical monotonic constraints": {
+      "age_years": 1,
+      "bmi": 1,
+      "ap_hi": 1,
+      "ap_lo": 1,
+      "bp_stage": 1,
+      "cholesterol": 1,
+      "gluc": 1,
+      "smoke": 1,
+      "alco": 1,
+      "active": -1
+    },
+    "inputs not given to KNN and SVM": [
+      "gluc",
+      "smoke",
+      "alco"
+    ],
+    "risk segmentation": {
+      "features": [
+        "age_years",
+        "bmi",
+        "ap_hi",
+        "ap_lo",
+        "pulse_pressure",
+        "cholesterol",
+        "gluc"
+      ],
+      "k": 3,
+      "pca_components": 5,
+      "cluster_to_level": {
+        "0": "Low",
+        "2": "Medium",
+        "1": "High"
+      }
+    }
+  },
+  "lineage": [
+    {
+      "step": "Load raw CSV",
+      "rows_before": 70000,
+      "rows_after": 70000,
+      "detail": "13 columns, separator ';'",
+      "removed": 0
+    },
+    {
+      "step": "Drop identifier columns",
+      "rows_before": 70000,
+      "rows_after": 70000,
+      "detail": "dropped ['id'] (no predictive meaning)",
+      "removed": 0
+    },
+    {
+      "step": "Remove duplicated records",
+      "rows_before": 70000,
+      "rows_after": 69976,
+      "detail": "identical rows (all features and label) kept once",
+      "removed": 24
+    },
+    {
+      "step": "Remove contradictory records",
+      "rows_before": 69976,
+      "rows_after": 69942,
+      "detail": "same feature values with different diagnosis",
+      "removed": 34
+    },
+    {
+      "step": "Filter impossible blood pressure",
+      "rows_before": 69942,
+      "rows_after": 68688,
+      "detail": "ap_hi outside [80, 250]: 247; ap_lo outside [40, 160]: 1007",
+      "removed": 1254
+    },
+    {
+      "step": "Check systolic > diastolic",
+      "rows_before": 68688,
+      "rows_after": 68606,
+      "detail": "systolic pressure must exceed diastolic pressure",
+      "removed": 82
+    },
+    {
+      "step": "Filter impossible height/weight",
+      "rows_before": 68606,
+      "rows_after": 68501,
+      "detail": "height outside [130, 210]: 89; weight outside [35, 200]: 16",
+      "removed": 105
+    },
+    {
+      "step": "Convert age from days to years",
+      "rows_before": 68501,
+      "rows_after": 68501,
+      "detail": "age_years = age_days / 365.25",
+      "removed": 0
+    },
+    {
+      "step": "Engineer clinical features",
+      "rows_before": 68501,
+      "rows_after": 68501,
+      "detail": "added bmi, map, pulse_pressure, bp_stage (AHA 2017)",
+      "removed": 0
+    },
+    {
+      "step": "Filter implausible BMI",
+      "rows_before": 68501,
+      "rows_after": 68480,
+      "detail": "bmi outside [13, 60]: 21",
+      "removed": 21
+    },
+    {
+      "step": "Balance classes (random undersampling)",
+      "rows_before": 68480,
+      "rows_after": 67772,
+      "detail": "class counts {0: 34594, 1: 33886} -> {0: 33886, 1: 33886}",
+      "removed": 708
+    },
+    {
+      "step": "Stratified train/test split",
+      "rows_before": 67772,
+      "rows_after": 54217,
+      "detail": "train 54,217 / test 13,555 (20% held out, seed 42)",
+      "removed": 13555
+    }
+  ],
+  "metrics": {
+    "tuning Logistic Regression": {
+      "cv_accuracy": 0.7268333333333334,
+      "tuning_rows": 12000.0
+    },
+    "tuning K-Nearest Neighbors": {
+      "cv_accuracy": 0.7105,
+      "tuning_rows": 12000.0
+    },
+    "tuning Random Forest": {
+      "cv_accuracy": 0.7180833333333334,
+      "tuning_rows": 12000.0
+    },
+    "tuning Support Vector Machine": {
+      "cv_accuracy": 0.7284166666666666,
+      "tuning_rows": 12000.0
+    },
+    "training time LR": {
+      "oof_seconds": 0.11730962500041642,
+      "final_fit_seconds": 0.02174333299990394,
+      "rows_used_final_fit": 54217.0
+    },
+    "training time KNN": {
+      "oof_seconds": 11.112822708999374,
+      "final_fit_seconds": 0.013855167000656365,
+      "rows_used_final_fit": 54217.0
+    },
+    "training time RF": {
+      "oof_seconds": 5.386925999999221,
+      "final_fit_seconds": 1.0313698329991894,
+      "rows_used_final_fit": 54217.0
+    },
+    "training time SVM": {
+      "oof_seconds": 68.40941050000038,
+      "final_fit_seconds": 7.225496459001079,
+      "rows_used_final_fit": 20000.0
+    },
+    "Logistic Regression": {
+      "accuracy": 0.7232017705643674,
+      "balanced_accuracy": 0.7231980354812131,
+      "precision": 0.7483171892956821,
+      "recall_sensitivity": 0.6725689833259554,
+      "specificity": 0.7738270876364709,
+      "f1": 0.7084239975132111,
+      "roc_auc": 0.7874596605001043,
+      "pr_auc": 0.7659549449942928,
+      "mcc": 0.44870382671329434,
+      "brier": 0.18891910455378857,
+      "tp": 4558.0,
+      "fp": 1533.0,
+      "tn": 5245.0,
+      "fn": 2219.0
+    },
+    "K-Nearest Neighbors": {
+      "accuracy": 0.7209147915898193,
+      "balanced_accuracy": 0.7209073283600786,
+      "precision": 0.7769145394006659,
+      "recall_sensitivity": 0.619743249225321,
+      "specificity": 0.8220714074948362,
+      "f1": 0.6894853484363457,
+      "roc_auc": 0.7882975600085914,
+      "pr_auc": 0.7681265896974042,
+      "mcc": 0.4511484446992156,
+      "brier": 0.18989052861379566,
+      "tp": 4200.0,
+      "fp": 1206.0,
+      "tn": 5572.0,
+      "fn": 2577.0
+    },
+    "Random Forest": {
+      "accuracy": 0.7176687569162671,
+      "balanced_accuracy": 0.7176625889913784,
+      "precision": 0.7613394755492559,
+      "recall_sensitivity": 0.6340563671240962,
+      "specificity": 0.8012688108586604,
+      "f1": 0.6918927622574672,
+      "roc_auc": 0.7879590236585977,
+      "pr_auc": 0.7657768235835809,
+      "mcc": 0.441544131025002,
+      "brier": 0.18977022863114001,
+      "tp": 4297.0,
+      "fp": 1347.0,
+      "tn": 5431.0,
+      "fn": 2480.0
+    },
+    "Support Vector Machine": {
+      "accuracy": 0.7218738472888233,
+      "balanced_accuracy": 0.7218685991746596,
+      "precision": 0.7586444176845003,
+      "recall_sensitivity": 0.650730411686587,
+      "specificity": 0.7930067866627324,
+      "f1": 0.7005559968228753,
+      "roc_auc": 0.788146148779743,
+      "pr_auc": 0.7741110354671497,
+      "mcc": 0.44829987432086726,
+      "brier": 0.18743657608937211,
+      "tp": 4410.0,
+      "fp": 1403.0,
+      "tn": 5375.0,
+      "fn": 2367.0
+    },
+    "Hard voting": {
+      "accuracy": 0.7239395057174475,
+      "balanced_accuracy": 0.7239339310626308,
+      "precision": 0.7637754215192074,
+      "recall_sensitivity": 0.6483694850228715,
+      "specificity": 0.7994983771023901,
+      "f1": 0.7013567438148444,
+      "roc_auc": NaN,
+      "pr_auc": NaN,
+      "mcc": 0.4530741295481329,
+      "brier": NaN,
+      "tp": 4394.0,
+      "fp": 1359.0,
+      "tn": 5419.0,
+      "fn": 2383.0
+    },
+    "Soft voting": {
+      "accuracy": 0.7246772408705274,
+      "balanced_accuracy": 0.7246717097599786,
+      "precision": 0.764277035236938,
+      "recall_sensitivity": 0.6496975062712115,
+      "specificity": 0.7996459132487459,
+      "f1": 0.7023448715903653,
+      "roc_auc": 0.7930584580576528,
+      "pr_auc": 0.7701382743430041,
+      "mcc": 0.4544841822088521,
+      "brier": 0.18646222605181026,
+      "tp": 4403.0,
+      "fp": 1358.0,
+      "tn": 5420.0,
+      "fn": 2374.0
+    },
+    "Stacking ensemble": {
+      "accuracy": 0.7251198819623755,
+      "balanced_accuracy": 0.7251152216592902,
+      "precision": 0.7576422901536902,
+      "recall_sensitivity": 0.6619448133392356,
+      "specificity": 0.7882856299793449,
+      "f1": 0.7065679634588125,
+      "roc_auc": 0.7930719119957444,
+      "pr_auc": 0.7696608620585355,
+      "mcc": 0.45386926484900164,
+      "brier": 0.18519879333174347,
+      "tp": 4486.0,
+      "fp": 1435.0,
+      "tn": 5343.0,
+      "fn": 2291.0
+    },
+    "system summary": {
+      "stacking_accuracy": 0.7251198819623755,
+      "accuracy_95ci_low": 0.7180357801549243,
+      "accuracy_95ci_high": 0.7326466248616748,
+      "best_base_model": "Logistic Regression",
+      "mcnemar_vs_best_base_p": 0.3290248700456766,
+      "referral_rate": 0.24898561416451495,
+      "accuracy_on_non_referred": 0.7830058939096267,
+      "meets_95_target": 0.0
+    },
+    "plausibility (final answer)": {
+      "max_share_violating": 0.0125,
+      "mean_share_violating": 0.0015625,
+      "constraints": 1.0
+    }
+  },
+  "figures": [
+    {
+      "number": 1,
+      "file": "fig_01_raw_outliers.png",
+      "slug": "raw_outliers",
+      "caption": "Raw measurements: impossible blood pressures, heights and weights",
+      "guide": {
+        "title": {
+          "es": "Datos crudos: mediciones imposibles",
+          "en": "Raw data: impossible measurements"
+        },
+        "what": {
+          "es": "Diagramas de caja de presi\u00f3n, estatura y peso tal como vienen en el archivo original, antes de limpiar.",
+          "en": "Boxplots of blood pressure, height and weight exactly as they come in the source file, before cleaning."
+        },
+        "read": {
+          "es": "Los puntos lejos de la caja son valores imposibles (p. ej. presiones de miles de mmHg o negativas). Por eso se aplican los filtros de rangos fisiol\u00f3gicos.",
+          "en": "Points far from the box are impossible values (e.g. pressures of thousands of mmHg or negative). They justify the physiological range filters."
+        }
+      }
+    },
+    {
+      "number": 2,
+      "file": "fig_02_cleaning_funnel.png",
+      "slug": "cleaning_funnel",
+      "caption": "Rows remaining after each cleaning step",
+      "guide": {
+        "title": {
+          "es": "Trazabilidad: filas que quedan en cada paso",
+          "en": "Traceability: rows left after each step"
+        },
+        "what": {
+          "es": "Cada barra es el conjunto de datos despu\u00e9s de un paso de limpieza; entre par\u00e9ntesis, cu\u00e1ntas filas quit\u00f3 ese paso.",
+          "en": "Each bar is the dataset after one cleaning step; in brackets, how many rows that step removed."
+        },
+        "read": {
+          "es": "L\u00e9ela de arriba hacia abajo. Ninguna fila desaparece sin explicaci\u00f3n: el motivo de cada paso est\u00e1 en TRACEABILITY.md.",
+          "en": "Read it top to bottom. No row disappears without a reason: each step is explained in TRACEABILITY.md."
+        }
+      }
+    },
+    {
+      "number": 3,
+      "file": "fig_03_class_balance.png",
+      "slug": "class_balance",
+      "caption": "Class balance before and after undersampling",
+      "guide": {
+        "title": {
+          "es": "Balance de clases antes y despu\u00e9s",
+          "en": "Class balance before and after"
+        },
+        "what": {
+          "es": "Cu\u00e1ntos casos hay de cada clase. Se toman todos los de la clase menos frecuente y la misma cantidad, al azar, de la m\u00e1s frecuente (submuestreo).",
+          "en": "How many cases of each class there are. All cases of the rarer class are kept and the same number is drawn at random from the common one (undersampling)."
+        },
+        "read": {
+          "es": "A la derecha las dos barras deben medir igual (50/50). As\u00ed la exactitud no se infla respondiendo siempre la clase com\u00fan.",
+          "en": "On the right both bars must be equal (50/50). Accuracy cannot then be inflated by always answering the common class."
+        }
+      }
+    },
+    {
+      "number": 4,
+      "file": "fig_04_distributions.png",
+      "slug": "distributions",
+      "caption": "Histograms and KDE of the numeric variables by diagnosis",
+      "guide": {
+        "title": {
+          "es": "Distribuci\u00f3n de cada variable por clase",
+          "en": "Distribution of each variable by class"
+        },
+        "what": {
+          "es": "Histograma con su curva suavizada (KDE) para cada variable, un color por clase. Arriba, la asimetr\u00eda (skewness).",
+          "en": "Histogram with its smoothed curve (KDE) for each variable, one colour per class. Above, the skewness."
+        },
+        "read": {
+          "es": "Si las dos curvas est\u00e1n separadas, esa variable ayuda a distinguir las clases; si se superponen, aporta poco.",
+          "en": "If the two curves are apart, the variable helps to tell the classes apart; if they overlap, it adds little."
+        }
+      }
+    },
+    {
+      "number": 5,
+      "file": "fig_05_iqr_boxplots.png",
+      "slug": "iqr_boxplots",
+      "caption": "Boxplots with the IQR outlier rule by diagnosis",
+      "guide": {
+        "title": {
+          "es": "Valores at\u00edpicos con la regla IQR",
+          "en": "Outliers with the IQR rule"
+        },
+        "what": {
+          "es": "Cajas por clase. Se marca como at\u00edpico lo que cae fuera de Q1 \u2212 1,5\u00b7IQR o Q3 + 1,5\u00b7IQR.",
+          "en": "Boxes per class. Anything outside Q1 \u2212 1.5\u00b7IQR or Q3 + 1.5\u00b7IQR is flagged as an outlier."
+        },
+        "read": {
+          "es": "La l\u00ednea es la mediana. Una caja m\u00e1s alta en el grupo enfermo indica un factor de riesgo. Los at\u00edpicos se revisan, no se borran autom\u00e1ticamente.",
+          "en": "The line is the median. A higher box in the sick group points to a risk factor. Outliers are reviewed, not deleted automatically."
+        }
+      }
+    },
+    {
+      "number": 6,
+      "file": "fig_06_split_violins.png",
+      "slug": "split_violins",
+      "caption": "Split violin plots: categorical factors vs. numeric variables",
+      "guide": {
+        "title": {
+          "es": "Violines divididos: factor vs. variable num\u00e9rica",
+          "en": "Split violins: factor vs. numeric variable"
+        },
+        "what": {
+          "es": "Cada viol\u00edn es la forma de la distribuci\u00f3n; la mitad izquierda es una clase y la derecha la otra.",
+          "en": "Each violin is the shape of the distribution; the left half is one class and the right half the other."
+        },
+        "read": {
+          "es": "Cuando la mitad derecha (con ECV) est\u00e1 m\u00e1s arriba, esa variable es m\u00e1s alta en los enfermos.",
+          "en": "When the right half (CVD) sits higher, the variable is higher in sick people."
+        }
+      }
+    },
+    {
+      "number": 7,
+      "file": "fig_07_categorical_prevalence.png",
+      "slug": "categorical_prevalence",
+      "caption": "CVD prevalence by categorical factor",
+      "guide": {
+        "title": {
+          "es": "Porcentaje de enfermos por factor",
+          "en": "Share of sick people per factor"
+        },
+        "what": {
+          "es": "Prevalencia = enfermos del grupo \u00f7 personas del grupo, para cada nivel de cada factor.",
+          "en": "Prevalence = sick people in the group \u00f7 people in the group, for every level of every factor."
+        },
+        "read": {
+          "es": "Barras sobre la l\u00ednea punteada (promedio general) marcan factores de riesgo. En este dataset fumar y la glucosa salen al rev\u00e9s de lo esperado: es un sesgo conocido de los datos y por eso el modelo lleva restricciones cl\u00ednicas.",
+          "en": "Bars above the dashed line (overall average) mark risk factors. In this dataset smoking and glucose go the opposite way to medicine: a known bias of the data, which is why the model has clinical constraints."
+        }
+      }
+    },
+    {
+      "number": 8,
+      "file": "fig_08_scatter.png",
+      "slug": "scatter",
+      "caption": "Scatter plots of blood pressure and age vs. BMI",
+      "guide": {
+        "title": {
+          "es": "Dispersi\u00f3n: presi\u00f3n y edad vs. IMC",
+          "en": "Scatter: pressure and age vs. BMI"
+        },
+        "what": {
+          "es": "Cada punto es un paciente, coloreado por diagn\u00f3stico.",
+          "en": "Each dot is a patient, coloured by diagnosis."
+        },
+        "read": {
+          "es": "Las zonas donde domina un color muestran combinaciones de valores asociadas a la enfermedad.",
+          "en": "Areas where one colour dominates show value combinations linked to the disease."
+        }
+      }
+    },
+    {
+      "number": 9,
+      "file": "fig_09_pairplot.png",
+      "slug": "pairplot",
+      "caption": "Pairplot of the main numeric variables",
+      "guide": {
+        "title": {
+          "es": "Todas las variables de dos en dos",
+          "en": "Every pair of variables"
+        },
+        "what": {
+          "es": "Matriz de dispersiones entre pares de variables; en la diagonal, la distribuci\u00f3n de cada una.",
+          "en": "Grid of scatter plots between pairs of variables; on the diagonal, each variable's distribution."
+        },
+        "read": {
+          "es": "Sirve para ver de un vistazo relaciones entre variables y si alguna separa las clases.",
+          "en": "Shows at a glance how variables relate and whether any of them separates the classes."
+        }
+      }
+    },
+    {
+      "number": 10,
+      "file": "fig_10_correlations.png",
+      "slug": "correlations",
+      "caption": "Pearson vs. Spearman correlation matrices (triangular)",
+      "guide": {
+        "title": {
+          "es": "Correlaciones de Pearson y Spearman",
+          "en": "Pearson and Spearman correlations"
+        },
+        "what": {
+          "es": "Pearson mide relaci\u00f3n lineal; Spearman, relaci\u00f3n ordenada (usa rangos y resiste at\u00edpicos). Valores de \u22121 a 1.",
+          "en": "Pearson measures linear association; Spearman, ordered association (uses ranks, robust to outliers). From \u22121 to 1."
+        },
+        "read": {
+          "es": "Rojo: suben juntas. Azul: una sube y la otra baja. Blanco: sin relaci\u00f3n. Mira la fila de la variable objetivo.",
+          "en": "Red: they rise together. Blue: one rises as the other falls. White: no relation. Look at the target's row."
+        }
+      }
+    },
+    {
+      "number": 11,
+      "file": "fig_11_vif_candidates.png",
+      "slug": "vif_candidates",
+      "caption": "Multicollinearity of the candidate features (VIF)",
+      "guide": {
+        "title": {
+          "es": "Multicolinealidad (VIF) de todas las variables",
+          "en": "Multicollinearity (VIF) of all variables"
+        },
+        "what": {
+          "es": "VIF = 1 / (1 \u2212 R\u00b2): cu\u00e1nto se puede predecir una variable a partir de las dem\u00e1s.",
+          "en": "VIF = 1 / (1 \u2212 R\u00b2): how well one variable can be predicted from the others."
+        },
+        "read": {
+          "es": "Verde < 5 bien, amarillo 5\u201310 moderado, rojo > 10 grave. Las variables con VIF infinito son copias de otras y se retiran del modelo.",
+          "en": "Green < 5 fine, yellow 5\u201310 moderate, red > 10 severe. Variables with infinite VIF are copies of others and are removed from the model."
+        }
+      }
+    },
+    {
+      "number": 12,
+      "file": "fig_12_vif_model_features.png",
+      "slug": "vif_model_features",
+      "caption": "VIF after dropping ['map', 'pulse_pressure', 'weight'] (exact linear combinations)",
+      "guide": {
+        "title": {
+          "es": "VIF despu\u00e9s de quitar variables redundantes",
+          "en": "VIF after removing redundant variables"
+        },
+        "what": {
+          "es": "El mismo c\u00e1lculo de VIF con las variables que de verdad usa el modelo.",
+          "en": "The same VIF computation with the variables the model really uses."
+        },
+        "read": {
+          "es": "Todas las barras deber\u00edan quedar en verde o amarillo: ya no hay informaci\u00f3n duplicada.",
+          "en": "All bars should now be green or yellow: no duplicated information is left."
+        }
+      }
+    },
+    {
+      "number": 13,
+      "file": "fig_13_pca_projection.png",
+      "slug": "pca_projection",
+      "caption": "2-D PCA projection of the clinical features by diagnosis",
+      "guide": {
+        "title": {
+          "es": "Mapa 2D de los datos (PCA)",
+          "en": "2-D map of the data (PCA)"
+        },
+        "what": {
+          "es": "PCA resume todas las variables en dos ejes que conservan la mayor variaci\u00f3n posible.",
+          "en": "PCA summarises all variables in two axes that keep as much variation as possible."
+        },
+        "read": {
+          "es": "Si los colores forman nubes separadas, las clases son f\u00e1ciles de distinguir; si se mezclan, el problema es dif\u00edcil.",
+          "en": "If the colours form separate clouds, the classes are easy to separate; if they mix, the problem is hard."
+        }
+      }
+    },
+    {
+      "number": 14,
+      "file": "fig_14_metric_comparison.png",
+      "slug": "metric_comparison",
+      "caption": "Test-set metrics of the four base models, voting schemes and the stacking ensemble",
+      "guide": {
+        "title": {
+          "es": "M\u00e9tricas de cada modelo y del sistema combinado",
+          "en": "Metrics of each model and of the combined system"
+        },
+        "what": {
+          "es": "Exactitud, precisi\u00f3n, sensibilidad, especificidad, F1 y AUC en datos que los modelos nunca vieron.",
+          "en": "Accuracy, precision, sensitivity, specificity, F1 and AUC on data the models never saw."
+        },
+        "read": {
+          "es": "M\u00e1s alto es mejor. Compara la barra del sistema combinado (stacking) con las de los 4 modelos; la l\u00ednea roja es la meta del 95 %.",
+          "en": "Higher is better. Compare the combined system (stacking) with the 4 models; the red line is the 95 % target."
+        }
+      }
+    },
+    {
+      "number": 15,
+      "file": "fig_15_confusion_matrices.png",
+      "slug": "confusion_matrices",
+      "caption": "Confusion matrices on the held-out test set",
+      "guide": {
+        "title": {
+          "es": "Matrices de confusi\u00f3n: aciertos y errores",
+          "en": "Confusion matrices: hits and errors"
+        },
+        "what": {
+          "es": "Tabla 2\u00d72 por modelo: filas = verdad, columnas = predicci\u00f3n. Cada fila suma 100 %.",
+          "en": "2\u00d72 table per model: rows = truth, columns = prediction. Each row adds up to 100 %."
+        },
+        "read": {
+          "es": "La diagonal son los aciertos. La celda de abajo a la izquierda son los enfermos que el modelo no detect\u00f3: es el error m\u00e1s peligroso.",
+          "en": "The diagonal holds the hits. The bottom-left cell is the sick cases the model missed: the most dangerous error."
+        }
+      }
+    },
+    {
+      "number": 16,
+      "file": "fig_16_roc_pr_curves.png",
+      "slug": "roc_pr_curves",
+      "caption": "ROC and precision-recall curves",
+      "guide": {
+        "title": {
+          "es": "Curvas ROC y precisi\u00f3n-sensibilidad",
+          "en": "ROC and precision-recall curves"
+        },
+        "what": {
+          "es": "C\u00f3mo cambian aciertos y falsas alarmas al mover el umbral de decisi\u00f3n. El \u00e1rea bajo la curva (AUC) resume la calidad.",
+          "en": "How hits and false alarms change as the decision threshold moves. The area under the curve (AUC) sums it up."
+        },
+        "read": {
+          "es": "Una curva pegada a la esquina superior izquierda (ROC) o superior derecha (PR) es mejor. La diagonal punteada es azar (AUC 0,5).",
+          "en": "A curve hugging the top-left (ROC) or top-right (PR) corner is better. The dotted diagonal is chance (AUC 0.5)."
+        }
+      }
+    },
+    {
+      "number": 17,
+      "file": "fig_17_calibration.png",
+      "slug": "calibration",
+      "caption": "Reliability of the predicted probabilities",
+      "guide": {
+        "title": {
+          "es": "\u00bfLas probabilidades dicen la verdad? (calibraci\u00f3n)",
+          "en": "Do the probabilities tell the truth? (calibration)"
+        },
+        "what": {
+          "es": "Se agrupan los casos por probabilidad predicha y se compara con el porcentaje real de positivos.",
+          "en": "Cases are grouped by predicted probability and compared with the real share of positives."
+        },
+        "read": {
+          "es": "Sobre la diagonal, \u00ab70 %\u00bb significa que de verdad 7 de cada 10 casos as\u00ed son positivos. Por debajo, el modelo exagera.",
+          "en": "On the diagonal, '70 %' really means 7 out of 10 such cases are positive. Below it, the model over-estimates."
+        }
+      }
+    },
+    {
+      "number": 18,
+      "file": "fig_18_meta_weights.png",
+      "slug": "meta_weights",
+      "caption": "Coefficients learned by the meta-model for each base model",
+      "guide": {
+        "title": {
+          "es": "Cu\u00e1nto conf\u00eda el sistema en cada modelo",
+          "en": "How much the system trusts each model"
+        },
+        "what": {
+          "es": "Pesos \u03b2 que aprendi\u00f3 el meta-modelo: P = \u03c3(\u03b2\u2080 + \u03a3 \u03b2\u2096\u00b7p\u2096). Son \u2265 0 por dise\u00f1o.",
+          "en": "Weights \u03b2 learned by the meta-model: P = \u03c3(\u03b2\u2080 + \u03a3 \u03b2\u2096\u00b7p\u2096). They are \u2265 0 by design."
+        },
+        "read": {
+          "es": "Barra m\u00e1s alta = el resultado final escucha m\u00e1s a ese modelo. Un peso 0 significa que su informaci\u00f3n ya la aportan los otros.",
+          "en": "Taller bar = the final answer listens more to that model. A weight of 0 means the others already carry its information."
+        }
+      }
+    },
+    {
+      "number": 19,
+      "file": "fig_19_model_diversity.png",
+      "slug": "model_diversity",
+      "caption": "Diversity between base models (OOF correlation and disagreement)",
+      "guide": {
+        "title": {
+          "es": "\u00bfLos 4 modelos piensan distinto?",
+          "en": "Do the 4 models think differently?"
+        },
+        "what": {
+          "es": "Izquierda: correlaci\u00f3n entre las probabilidades de cada par de modelos. Derecha: % de casos en que discrepan.",
+          "en": "Left: correlation between the probabilities of each pair of models. Right: % of cases where they disagree."
+        },
+        "read": {
+          "es": "Combinar modelos solo ayuda si a veces discrepan: correlaciones menores a 1 y desacuerdos mayores a 0 indican modelos complementarios.",
+          "en": "Combining models only helps if they sometimes disagree: correlations below 1 and non-zero disagreement mean complementary models."
+        }
+      }
+    },
+    {
+      "number": 20,
+      "file": "fig_20_probability_distribution.png",
+      "slug": "probability_distribution",
+      "caption": "Distribution of the final probability per true class and referral band",
+      "guide": {
+        "title": {
+          "es": "Probabilidad final seg\u00fan la clase real",
+          "en": "Final probability by true class"
+        },
+        "what": {
+          "es": "Histograma de la probabilidad que da el sistema, un color por clase real. La franja gris es la zona de duda.",
+          "en": "Histogram of the system's probability, one colour per true class. The grey band is the doubt zone."
+        },
+        "read": {
+          "es": "Lo ideal: un color pegado a 0 y el otro a 1. Donde los colores se cruzan est\u00e1n los errores; los casos en la franja gris se remiten al m\u00e9dico.",
+          "en": "Ideal: one colour near 0 and the other near 1. Errors live where colours overlap; cases in the grey band go to a clinician."
+        }
+      }
+    },
+    {
+      "number": 21,
+      "file": "fig_21_coverage_curve.png",
+      "slug": "coverage_curve",
+      "caption": "Accuracy when the system answers only its most confident cases",
+      "guide": {
+        "title": {
+          "es": "Exactitud si el sistema solo responde lo que tiene claro",
+          "en": "Accuracy if the system only answers clear cases"
+        },
+        "what": {
+          "es": "Se ordenan los casos de m\u00e1s a menos seguros; para cada porcentaje respondido (cobertura) se calcula la exactitud.",
+          "en": "Cases are sorted from most to least confident; for each share answered (coverage) the accuracy is computed."
+        },
+        "read": {
+          "es": "Hacia la izquierda el sistema responde menos casos y acierta m\u00e1s. Donde la curva cruza la l\u00ednea del 95 % se lee qu\u00e9 parte de los casos puede resolverse sola con esa exactitud.",
+          "en": "Towards the left the system answers fewer cases and gets more right. Where the curve crosses the 95 % line tells which share of cases it can solve on its own at that accuracy."
+        }
+      }
+    },
+    {
+      "number": 22,
+      "file": "fig_22_permutation_importance.png",
+      "slug": "permutation_importance",
+      "caption": "Permutation importance of each feature group for the ensemble",
+      "guide": {
+        "title": {
+          "es": "\u00bfEn qu\u00e9 datos se apoya el sistema?",
+          "en": "Which inputs does the system rely on?"
+        },
+        "what": {
+          "es": "Importancia por permutaci\u00f3n: cu\u00e1nto cae la exactitud al desordenar al azar una variable.",
+          "en": "Permutation importance: how much accuracy drops when one input is randomly shuffled."
+        },
+        "read": {
+          "es": "Barra m\u00e1s larga = el sistema depende m\u00e1s de ese dato. Barras cerca de 0 = se podr\u00eda quitar sin perder exactitud.",
+          "en": "Longer bar = the system depends more on that input. Bars near 0 = it could be removed without losing accuracy."
+        }
+      }
+    },
+    {
+      "number": 23,
+      "file": "fig_23_logistic_coefficients.png",
+      "slug": "logistic_coefficients",
+      "caption": "Standardised logistic-regression coefficients",
+      "guide": {
+        "title": {
+          "es": "Direcci\u00f3n de cada factor de riesgo",
+          "en": "Direction of each risk factor"
+        },
+        "what": {
+          "es": "Coeficientes de la regresi\u00f3n log\u00edstica por cada desviaci\u00f3n est\u00e1ndar de la variable (restringidos al signo cl\u00ednico).",
+          "en": "Logistic-regression coefficients per standard deviation of each input (constrained to the clinical sign)."
+        },
+        "read": {
+          "es": "Naranja = sube el riesgo, azul = lo baja. Cuanto m\u00e1s larga la barra, mayor el efecto.",
+          "en": "Orange = raises the risk, blue = lowers it. The longer the bar, the stronger the effect."
+        }
+      }
+    },
+    {
+      "number": 24,
+      "file": "fig_24_plausibility_audit.png",
+      "slug": "plausibility_audit",
+      "caption": "Clinical plausibility audit: wrong-way changes per model and factor",
+      "guide": {
+        "title": {
+          "es": "Auditor\u00eda cl\u00ednica: \u00bfel riesgo se mueve en la direcci\u00f3n correcta?",
+          "en": "Clinical audit: does risk move the right way?"
+        },
+        "what": {
+          "es": "Para pacientes reales se sube un factor (presi\u00f3n, peso, colesterol\u2026) dejando lo dem\u00e1s igual y se cuenta a cu\u00e1ntos les baja el riesgo m\u00e1s de 1 punto.",
+          "en": "For real patients one factor (pressure, weight, cholesterol\u2026) is raised with everything else fixed, counting for how many the risk falls by more than 1 point."
+        },
+        "read": {
+          "es": "0 % (blanco) = siempre coherente con la medicina. Rojo = el modelo contradice la cl\u00ednica. La columna \u00abStacking\u00bb es la respuesta final.",
+          "en": "0 % (white) = always consistent with medicine. Red = the model contradicts clinical knowledge. The 'Stacking' column is the final answer."
+        }
+      }
+    },
+    {
+      "number": 25,
+      "file": "fig_25_kmeans_k_scan.png",
+      "slug": "kmeans_k_scan",
+      "caption": "Choice of k for K-means (k = 3 chosen)",
+      "guide": {
+        "title": {
+          "es": "\u00bfCu\u00e1ntos grupos de pacientes? (K-means)",
+          "en": "How many patient groups? (K-means)"
+        },
+        "what": {
+          "es": "M\u00e9todo del codo (inercia J) y coeficiente de silueta para k = 2\u20268 grupos.",
+          "en": "Elbow method (inertia J) and silhouette coefficient for k = 2\u20268 groups."
+        },
+        "read": {
+          "es": "Se busca el \u00abcodo\u00bb donde J deja de bajar r\u00e1pido y una silueta alta. Se eligi\u00f3 k = 3 (riesgo bajo, medio, alto).",
+          "en": "Look for the 'elbow' where J stops falling fast and a high silhouette. k = 3 was chosen (low, medium, high risk)."
+        }
+      }
+    },
+    {
+      "number": 26,
+      "file": "fig_26_risk_segments_pca.png",
+      "slug": "risk_segments_pca",
+      "caption": "Risk segments in PCA space (test set)",
+      "guide": {
+        "title": {
+          "es": "Grupos de riesgo en el mapa PCA",
+          "en": "Risk groups on the PCA map"
+        },
+        "what": {
+          "es": "Pacientes de prueba coloreados por el grupo que les asign\u00f3 K-means (sin usar el diagn\u00f3stico).",
+          "en": "Test patients coloured by the group K-means gave them (without using the diagnosis)."
+        },
+        "read": {
+          "es": "Cada color es un perfil parecido de pacientes; los grupos ocupan zonas distintas del mapa.",
+          "en": "Each colour is a similar patient profile; the groups occupy different areas of the map."
+        }
+      }
+    },
+    {
+      "number": 27,
+      "file": "fig_27_risk_segments_profile.png",
+      "slug": "risk_segments_profile",
+      "caption": "Mean profile and observed CVD prevalence per segment (test set)",
+      "guide": {
+        "title": {
+          "es": "Perfil de cada grupo y su porcentaje de enfermos",
+          "en": "Profile of each group and its share of sick people"
+        },
+        "what": {
+          "es": "Izquierda: promedio de cada variable por grupo. Derecha: porcentaje real con ECV en cada grupo.",
+          "en": "Left: mean of each variable per group. Right: real share with CVD in each group."
+        },
+        "read": {
+          "es": "El grupo de riesgo alto debe ser mayor, con presi\u00f3n m\u00e1s alta y m\u00e1s enfermos. Confirma que los grupos tienen sentido cl\u00ednico.",
+          "en": "The high-risk group should be older, with higher pressure and more disease. It confirms the groups make clinical sense."
+        }
+      }
+    },
+    {
+      "number": 28,
+      "file": "fig_28_segments_vs_ensemble.png",
+      "slug": "segments_vs_ensemble",
+      "caption": "Ensemble probability distribution inside each K-means segment",
+      "guide": {
+        "title": {
+          "es": "Los grupos y el modelo coinciden",
+          "en": "The groups and the model agree"
+        },
+        "what": {
+          "es": "Probabilidad que da el sistema supervisado dentro de cada grupo no supervisado.",
+          "en": "Probability given by the supervised system inside each unsupervised group."
+        },
+        "read": {
+          "es": "Las cajas deben subir de bajo a alto: dos m\u00e9todos independientes llegan a la misma conclusi\u00f3n.",
+          "en": "Boxes should rise from low to high: two independent methods reach the same conclusion."
+        }
+      }
+    },
+    {
+      "number": 29,
+      "file": "fig_29_simulation_archetypes.png",
+      "slug": "simulation_archetypes",
+      "caption": "Per-model and final probability for simulated patient archetypes",
+      "guide": {
+        "title": {
+          "es": "Simulaci\u00f3n: pacientes hipot\u00e9ticos a trav\u00e9s del sistema",
+          "en": "Simulation: hypothetical patients through the system"
+        },
+        "what": {
+          "es": "Cada fila es un paciente inventado; cada columna, la probabilidad que da cada modelo y, al final, la respuesta \u00fanica.",
+          "en": "Each row is an invented patient; each column the probability from each model and, last, the single answer."
+        },
+        "read": {
+          "es": "Azul = bajo riesgo, rojo = alto. Permite seguir caso por caso c\u00f3mo los 4 modelos se combinan en 1 respuesta. \u00ab[refer]\u00bb = se remite al m\u00e9dico.",
+          "en": "Blue = low risk, red = high. Follow case by case how the 4 models combine into 1 answer. '[refer]' = sent to a clinician."
+        }
+      }
+    },
+    {
+      "number": 30,
+      "file": "fig_30_simulation_test_patients.png",
+      "slug": "simulation_test_patients",
+      "caption": "Per-model and final probability for 12 unseen test patients",
+      "guide": {
+        "title": {
+          "es": "Simulaci\u00f3n con pacientes reales no vistos",
+          "en": "Simulation with unseen real patients"
+        },
+        "what": {
+          "es": "Igual que la anterior pero con pacientes reales del conjunto de prueba, con su diagn\u00f3stico verdadero.",
+          "en": "Same as above with real test-set patients and their true diagnosis."
+        },
+        "read": {
+          "es": "\u00ab(ok)\u00bb = el sistema acert\u00f3, \u00ab(WRONG)\u00bb = se equivoc\u00f3. Es la trazabilidad completa de cada predicci\u00f3n.",
+          "en": "'(ok)' = the system was right, '(WRONG)' = it was wrong. It is the full trace of each prediction."
+        }
+      }
+    }
+  ],
+  "tables": [
+    {
+      "file": "vif_candidates.csv",
+      "caption": "VIF of all candidate features",
+      "rows": 15
+    },
+    {
+      "file": "vif_model_features.csv",
+      "caption": "VIF after dropping collinear features",
+      "rows": 12
+    },
+    {
+      "file": "descriptive_statistics.csv",
+      "caption": "Descriptive statistics of the clean dataset",
+      "rows": 16
+    },
+    {
+      "file": "split_assignment.csv",
+      "caption": "Row-level train/test assignment",
+      "rows": 67772
+    },
+    {
+      "file": "tuning_LR.csv",
+      "caption": "Randomized search results for Logistic Regression",
+      "rows": 8
+    },
+    {
+      "file": "tuning_KNN.csv",
+      "caption": "Randomized search results for K-Nearest Neighbors",
+      "rows": 2
+    },
+    {
+      "file": "tuning_RF.csv",
+      "caption": "Randomized search results for Random Forest",
+      "rows": 8
+    },
+    {
+      "file": "tuning_SVM.csv",
+      "caption": "Randomized search results for Support Vector Machine",
+      "rows": 8
+    },
+    {
+      "file": "oof_metrics.csv",
+      "caption": "Cross-validated (out-of-fold) metrics",
+      "rows": 4
+    },
+    {
+      "file": "oof_predictions.csv",
+      "caption": "Out-of-fold probabilities used to train the meta-model",
+      "rows": 54217
+    },
+    {
+      "file": "test_metrics.csv",
+      "caption": "Held-out test metrics",
+      "rows": 7
+    },
+    {
+      "file": "permutation_importance.csv",
+      "caption": "Permutation importance of the stacking ensemble",
+      "rows": 12
+    },
+    {
+      "file": "logistic_coefficients.csv",
+      "caption": "Standardised logistic-regression coefficients and odds ratios",
+      "rows": 12
+    },
+    {
+      "file": "plausibility_audit.csv",
+      "caption": "Share of patients whose risk moves against the clinical direction (> 1 pp)",
+      "rows": 40
+    },
+    {
+      "file": "kmeans_k_scan.csv",
+      "caption": "Elbow and silhouette for k = 2..8",
+      "rows": 7
+    },
+    {
+      "file": "risk_segments_profile.csv",
+      "caption": "Clinical profile and CVD prevalence per risk segment (test set)",
+      "rows": 3
+    },
+    {
+      "file": "simulation_archetypes.csv",
+      "caption": "Simulated patient archetypes through the system",
+      "rows": 8
+    },
+    {
+      "file": "simulation_test_patients.csv",
+      "caption": "12 unseen test patients through the system",
+      "rows": 12
+    }
+  ],
+  "models": [
+    {
+      "file": "stacking_ensemble.joblib",
+      "description": "StackingEnsemble: 4 tuned base models + logistic meta-model",
+      "sha256": "b2173379b12b4ac1dfa133410967352c13496c93c7410171095b2620ee768fcf",
+      "bytes": 7967721
+    },
+    {
+      "file": "risk_segmenter.joblib",
+      "description": "RiskSegmenter: PCA + K-means (k = 3) -> Low / Medium / High risk",
+      "sha256": "ae5e11b396dc4857cf08875f2cd23dfe09e248d0c469534350cb7e4d93466f74",
+      "bytes": 23761
+    }
+  ],
+  "notes": [
+    "Dropped ['map', 'pulse_pressure', 'weight'] from the model inputs: map and pulse_pressure are linear combinations of ap_hi/ap_lo (VIF -> inf) and weight is explained by bmi and height (VIF ~ 100)."
+  ]
+}

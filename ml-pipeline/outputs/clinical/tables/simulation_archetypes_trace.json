@@ -1,0 +1,330 @@
+[
+  {
+    "case": "P1 healthy young woman",
+    "inputs": {
+      "age_years": 35.0,
+      "gender": 1.0,
+      "height": 165.0,
+      "bmi": 21.3,
+      "ap_hi": 110.0,
+      "ap_lo": 70.0,
+      "bp_stage": 0.0,
+      "cholesterol": 1.0,
+      "gluc": 1.0,
+      "smoke": 0.0,
+      "alco": 0.0,
+      "active": 1.0
+    },
+    "base_probabilities": {
+      "LR": 0.0843,
+      "KNN": 0.126,
+      "RF": 0.0799,
+      "SVM": 0.2349
+    },
+    "base_votes": {
+      "LR": 0,
+      "KNN": 0,
+      "RF": 0,
+      "SVM": 0
+    },
+    "meta_contributions": {
+      "LR": 0.1056,
+      "KNN": 0.0982,
+      "RF": 0.1574,
+      "SVM": 0.364
+    },
+    "meta_intercept": -2.716,
+    "meta_logit": -1.9908,
+    "final_probability": 0.1202,
+    "final_prediction": 0,
+    "referred_to_clinician": false,
+    "risk_segment": "Low"
+  },
+  {
+    "case": "P2 overweight man, high-normal BP",
+    "inputs": {
+      "age_years": 50.0,
+      "gender": 2.0,
+      "height": 175.0,
+      "bmi": 28.73,
+      "ap_hi": 130.0,
+      "ap_lo": 85.0,
+      "bp_stage": 2.0,
+      "cholesterol": 2.0,
+      "gluc": 1.0,
+      "smoke": 0.0,
+      "alco": 0.0,
+      "active": 1.0
+    },
+    "base_probabilities": {
+      "LR": 0.5782,
+      "KNN": 0.4212,
+      "RF": 0.5437,
+      "SVM": 0.5413
+    },
+    "base_votes": {
+      "LR": 1,
+      "KNN": 0,
+      "RF": 1,
+      "SVM": 1
+    },
+    "meta_contributions": {
+      "LR": 0.7244,
+      "KNN": 0.3284,
+      "RF": 1.0714,
+      "SVM": 0.8389
+    },
+    "meta_intercept": -2.716,
+    "meta_logit": 0.247,
+    "final_probability": 0.5614,
+    "final_prediction": 1,
+    "referred_to_clinician": true,
+    "risk_segment": "Low"
+  },
+  {
+    "case": "P3 obese woman, stage-2 HTN",
+    "inputs": {
+      "age_years": 60.0,
+      "gender": 1.0,
+      "height": 160.0,
+      "bmi": 33.2,
+      "ap_hi": 150.0,
+      "ap_lo": 95.0,
+      "bp_stage": 3.0,
+      "cholesterol": 3.0,
+      "gluc": 2.0,
+      "smoke": 0.0,
+      "alco": 0.0,
+      "active": 0.0
+    },
+    "base_probabilities": {
+      "LR": 0.94,
+      "KNN": 0.8272,
+      "RF": 0.8627,
+      "SVM": 0.8661
+    },
+    "base_votes": {
+      "LR": 1,
+      "KNN": 1,
+      "RF": 1,
+      "SVM": 1
+    },
+    "meta_contributions": {
+      "LR": 1.1778,
+      "KNN": 0.6449,
+      "RF": 1.7,
+      "SVM": 1.3422
+    },
+    "meta_intercept": -2.716,
+    "meta_logit": 2.1488,
+    "final_probability": 0.8956,
+    "final_prediction": 1,
+    "referred_to_clinician": false,
+    "risk_segment": "Medium"
+  },
+  {
+    "case": "P4 smoker man, severe HTN",
+    "inputs": {
+      "age_years": 58.0,
+      "gender": 2.0,
+      "height": 172.0,
+      "bmi": 27.04,
+      "ap_hi": 170.0,
+      "ap_lo": 100.0,
+      "bp_stage": 3.0,
+      "cholesterol": 2.0,
+      "gluc": 1.0,
+      "smoke": 1.0,
+      "alco": 1.0,
+      "active": 0.0
+    },
+    "base_probabilities": {
+      "LR": 0.9528,
+      "KNN": 0.8532,
+      "RF": 0.872,
+      "SVM": 0.8673
+    },
+    "base_votes": {
+      "LR": 1,
+      "KNN": 1,
+      "RF": 1,
+      "SVM": 1
+    },
+    "meta_contributions": {
+      "LR": 1.1938,
+      "KNN": 0.6652,
+      "RF": 1.7183,
+      "SVM": 1.344
+    },
+    "meta_intercept": -2.716,
+    "meta_logit": 2.2052,
+    "final_probability": 0.9007,
+    "final_prediction": 1,
+    "referred_to_clinician": false,
+    "risk_segment": "High"
+  },
+  {
+    "case": "P5 borderline middle-aged",
+    "inputs": {
+      "age_years": 48.0,
+      "gender": 1.0,
+      "height": 168.0,
+      "bmi": 24.8,
+      "ap_hi": 125.0,
+      "ap_lo": 82.0,
+      "bp_stage": 2.0,
+      "cholesterol": 1.0,
+      "gluc": 1.0,
+      "smoke": 0.0,
+      "alco": 0.0,
+      "active": 1.0
+    },
+    "base_probabilities": {
+      "LR": 0.367,
+      "KNN": 0.2768,
+      "RF": 0.3243,
+      "SVM": 0.3187
+    },
+    "base_votes": {
+      "LR": 0,
+      "KNN": 0,
+      "RF": 0,
+      "SVM": 0
+    },
+    "meta_contributions": {
+      "LR": 0.4598,
+      "KNN": 0.2158,
+      "RF": 0.639,
+      "SVM": 0.4939
+    },
+    "meta_intercept": -2.716,
+    "meta_logit": -0.9076,
+    "final_probability": 0.2875,
+    "final_prediction": 0,
+    "referred_to_clinician": false,
+    "risk_segment": "Low"
+  },
+  {
+    "case": "P6 older but healthy",
+    "inputs": {
+      "age_years": 62.0,
+      "gender": 2.0,
+      "height": 170.0,
+      "bmi": 24.22,
+      "ap_hi": 120.0,
+      "ap_lo": 80.0,
+      "bp_stage": 2.0,
+      "cholesterol": 1.0,
+      "gluc": 1.0,
+      "smoke": 0.0,
+      "alco": 0.0,
+      "active": 1.0
+    },
+    "base_probabilities": {
+      "LR": 0.4546,
+      "KNN": 0.3748,
+      "RF": 0.4389,
+      "SVM": 0.3436
+    },
+    "base_votes": {
+      "LR": 0,
+      "KNN": 0,
+      "RF": 0,
+      "SVM": 0
+    },
+    "meta_contributions": {
+      "LR": 0.5696,
+      "KNN": 0.2922,
+      "RF": 0.8648,
+      "SVM": 0.5324
+    },
+    "meta_intercept": -2.716,
+    "meta_logit": -0.457,
+    "final_probability": 0.3877,
+    "final_prediction": 0,
+    "referred_to_clinician": true,
+    "risk_segment": "Low"
+  },
+  {
+    "case": "P7 diabetic, elevated chol",
+    "inputs": {
+      "age_years": 55.0,
+      "gender": 1.0,
+      "height": 158.0,
+      "bmi": 30.04,
+      "ap_hi": 135.0,
+      "ap_lo": 85.0,
+      "bp_stage": 2.0,
+      "cholesterol": 3.0,
+      "gluc": 3.0,
+      "smoke": 0.0,
+      "alco": 0.0,
+      "active": 0.0
+    },
+    "base_probabilities": {
+      "LR": 0.8151,
+      "KNN": 0.734,
+      "RF": 0.5907,
+      "SVM": 0.7957
+    },
+    "base_votes": {
+      "LR": 1,
+      "KNN": 1,
+      "RF": 1,
+      "SVM": 1
+    },
+    "meta_contributions": {
+      "LR": 1.0212,
+      "KNN": 0.5722,
+      "RF": 1.1638,
+      "SVM": 1.2331
+    },
+    "meta_intercept": -2.716,
+    "meta_logit": 1.2744,
+    "final_probability": 0.7815,
+    "final_prediction": 1,
+    "referred_to_clinician": false,
+    "risk_segment": "Medium"
+  },
+  {
+    "case": "P8 young man, hypertensive",
+    "inputs": {
+      "age_years": 40.0,
+      "gender": 2.0,
+      "height": 180.0,
+      "bmi": 29.32,
+      "ap_hi": 145.0,
+      "ap_lo": 92.0,
+      "bp_stage": 3.0,
+      "cholesterol": 1.0,
+      "gluc": 1.0,
+      "smoke": 1.0,
+      "alco": 0.0,
+      "active": 1.0
+    },
+    "base_probabilities": {
+      "LR": 0.5834,
+      "KNN": 0.5716,
+      "RF": 0.7406,
+      "SVM": 0.8048
+    },
+    "base_votes": {
+      "LR": 1,
+      "KNN": 1,
+      "RF": 1,
+      "SVM": 1
+    },
+    "meta_contributions": {
+      "LR": 0.731,
+      "KNN": 0.4456,
+      "RF": 1.4593,
+      "SVM": 1.2473
+    },
+    "meta_intercept": -2.716,
+    "meta_logit": 1.1672,
+    "final_probability": 0.7626,
+    "final_prediction": 1,
+    "referred_to_clinician": false,
+    "risk_segment": "High"
+  }
+]

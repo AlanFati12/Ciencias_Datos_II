@@ -1,0 +1,203 @@
+{
+  "tier": "clinical",
+  "target": "cardio",
+  "labels": {
+    "0": "No CVD",
+    "1": "CVD"
+  },
+  "features": [
+    "age_years",
+    "gender",
+    "height",
+    "bmi",
+    "ap_hi",
+    "ap_lo",
+    "bp_stage",
+    "cholesterol",
+    "gluc",
+    "smoke",
+    "alco",
+    "active"
+  ],
+  "threshold": 0.5,
+  "referral_band": [
+    0.35,
+    0.65
+  ],
+  "meta_weights": {
+    "intercept": -2.7160381860881513,
+    "LR": 1.2528686567635454,
+    "KNN": 0.7796103349404183,
+    "RF": 1.970432764623543,
+    "SVM": 1.549723611382434
+  },
+  "base_models": {
+    "LR": "Logistic Regression",
+    "KNN": "K-Nearest Neighbors",
+    "RF": "Random Forest",
+    "SVM": "Support Vector Machine"
+  },
+  "training_stats": {
+    "age_years": {
+      "median": 53.9,
+      "mode": 56.0,
+      "p01": 39.6,
+      "p99": 64.3
+    },
+    "gender": {
+      "median": 1.0,
+      "mode": 1.0,
+      "p01": 1.0,
+      "p99": 2.0
+    },
+    "height": {
+      "median": 165.0,
+      "mode": 165.0,
+      "p01": 147.0,
+      "p99": 184.0
+    },
+    "weight": {
+      "median": 72.0,
+      "mode": 65.0,
+      "p01": 48.0,
+      "p99": 117.0
+    },
+    "ap_hi": {
+      "median": 120.0,
+      "mode": 120.0,
+      "p01": 90.0,
+      "p99": 180.0
+    },
+    "ap_lo": {
+      "median": 80.0,
+      "mode": 80.0,
+      "p01": 60.0,
+      "p99": 102.0
+    },
+    "cholesterol": {
+      "median": 1.0,
+      "mode": 1.0,
+      "p01": 1.0,
+      "p99": 3.0
+    },
+    "gluc": {
+      "median": 1.0,
+      "mode": 1.0,
+      "p01": 1.0,
+      "p99": 3.0
+    },
+    "smoke": {
+      "median": 0.0,
+      "mode": 0.0,
+      "p01": 0.0,
+      "p99": 1.0
+    },
+    "alco": {
+      "median": 0.0,
+      "mode": 0.0,
+      "p01": 0.0,
+      "p99": 1.0
+    },
+    "active": {
+      "median": 1.0,
+      "mode": 1.0,
+      "p01": 0.0,
+      "p99": 1.0
+    },
+    "bmi": {
+      "median": 26.35,
+      "mode": 23.88,
+      "p01": 18.69,
+      "p99": 43.7
+    },
+    "bp_stage": {
+      "median": 2.0,
+      "mode": 2.0,
+      "p01": 0.0,
+      "p99": 3.0
+    }
+  },
+  "segment_features": [
+    "age_years",
+    "bmi",
+    "ap_hi",
+    "ap_lo",
+    "pulse_pressure",
+    "cholesterol",
+    "gluc"
+  ],
+  "segment_profiles": {
+    "Low": {
+      "age_years": 52.052,
+      "bmi": 26.107,
+      "ap_hi": 117.367,
+      "ap_lo": 77.399,
+      "pulse_pressure": 39.968,
+      "cholesterol": 1.103,
+      "gluc": 1.039,
+      "cvd_prevalence": 0.33,
+      "patients": 8280
+    },
+    "Medium": {
+      "age_years": 55.607,
+      "bmi": 29.506,
+      "ap_hi": 129.576,
+      "ap_lo": 82.938,
+      "pulse_pressure": 46.638,
+      "cholesterol": 2.5,
+      "gluc": 2.209,
+      "cvd_prevalence": 0.676,
+      "patients": 1923
+    },
+    "High": {
+      "age_years": 55.017,
+      "bmi": 29.616,
+      "ap_hi": 148.173,
+      "ap_lo": 90.029,
+      "pulse_pressure": 58.144,
+      "cholesterol": 1.332,
+      "gluc": 1.095,
+      "cvd_prevalence": 0.819,
+      "patients": 3352
+    }
+  },
+  "raw_inputs": {
+    "age_years": "years",
+    "gender": "1 = female, 2 = male",
+    "height": "cm",
+    "weight": "kg",
+    "ap_hi": "systolic mmHg",
+    "ap_lo": "diastolic mmHg",
+    "cholesterol": "1 normal, 2 above, 3 well above",
+    "gluc": "1 normal, 2 above, 3 well above",
+    "smoke": "0/1",
+    "alco": "0/1",
+    "active": "0/1"
+  },
+  "valid_ranges": {
+    "ap_hi": [
+      80,
+      250
+    ],
+    "ap_lo": [
+      40,
+      160
+    ],
+    "height": [
+      130,
+      210
+    ],
+    "weight": [
+      35,
+      200
+    ],
+    "bmi": [
+      13,
+      60
+    ]
+  },
+  "derived": {
+    "bmi": "weight / (height/100)^2",
+    "bp_stage": "AHA 2017 category 0-4"
+  }
+}

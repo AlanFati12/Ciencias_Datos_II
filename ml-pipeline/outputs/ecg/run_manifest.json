@@ -1,0 +1,1185 @@
+{
+  "tier": "ecg",
+  "started": "2026-10-27T09:34:38",
+  "finished": "2026-10-27T09:51:16",
+  "seed": 42,
+  "environment": {
+    "python": "3.14.7",
+    "platform": "macOS-27.2-arm64-arm-64bit-Mach-O",
+    "numpy": "2.5.4",
+    "pandas": "3.1.0",
+    "scipy": "1.18.1",
+    "scikit-learn": "1.9.1",
+    "matplotlib": "3.11.2",
+    "seaborn": "0.13.2"
+  },
+  "inputs": [
+    {
+      "path": "data/raw/ecg/mitdb.zip",
+      "description": "PhysioNet mitdb v1.0.0 (ODC-By 1.0)",
+      "sha256": "47b26926927c11bd9174154d367c811afc1b186f650f8a205931ca8c520f0a87",
+      "bytes": 77030320
+    },
+    {
+      "path": "data/raw/ecg/svdb.zip",
+      "description": "PhysioNet svdb v1.0.0 (ODC-By 1.0)",
+      "sha256": "ef0cf2aae45234107f5239f31662b64afba2067d707bf52f3a3adbf2de9fd25b",
+      "bytes": 54576759
+    }
+  ],
+  "params": {
+    "mode": "full",
+    "ecg_extraction": {
+      "fs_target_hz": 128,
+      "window_s": [
+        0.25,
+        0.45
+      ],
+      "samples_per_beat": 90,
+      "bandpass_hz": [
+        0.5,
+        40.0
+      ],
+      "filter": "Butterworth order 3, zero-phase (sosfiltfilt)",
+      "local_rr_beats": 10,
+      "lead": "channel 0 (MLII in MIT-BIH)",
+      "peak_alignment": "largest |band-passed| deflection within \u00b175 ms",
+      "peak_detection_in_app": "XQRS (wfdb.processing) + the same alignment",
+      "normalisation": "z-score per beat",
+      "label": "AAMI EC57: N = normal, S/V/F = abnormal"
+    },
+    "patients": 121,
+    "model features": "100 columns (['pre_rr', 'post_rr', 'local_rr', 'rr_ratio', 'post_pre_ratio', 'amplitude_mv'] ...)",
+    "Logistic Regression best hyperparameters": {
+      "C": 56.69849511478853
+    },
+    "K-Nearest Neighbors best hyperparameters": {
+      "n_neighbors": 40,
+      "p": 2,
+      "weights": "distance"
+    },
+    "Random Forest best hyperparameters": {
+      "min_samples_leaf": 10,
+      "max_features": "sqrt",
+      "max_depth": 16
+    },
+    "Support Vector Machine best hyperparameters": {
+      "C": 0.3511356313970407,
+      "gamma": 0.0035498788321965025
+    },
+    "stacking": {
+      "cv_folds": 5,
+      "meta_model": "LogisticRegression(C=1.0), weights beta_k >= 0",
+      "meta_features": [
+        "LR",
+        "KNN",
+        "RF",
+        "SVM"
+      ],
+      "referral_band": [
+        0.35,
+        0.65
+      ],
+      "grouped_cv": true
+    },
+    "meta-model weights": {
+      "intercept": -3.398022981408816,
+      "LR": 1.6190051217806056,
+      "KNN": 0.0,
+      "RF": 6.265795050512607,
+      "SVM": 0.0
+    },
+    "patient-CV fold 1 stacking": {
+      "cv_folds": 5,
+      "meta_model": "LogisticRegression(C=1.0), weights beta_k >= 0",
+      "meta_features": [
+        "LR",
+        "KNN",
+        "RF",
+        "SVM"
+      ],
+      "referral_band": [
+        0.35,
+        0.65
+      ],
+      "grouped_cv": true
+    },
+    "patient-CV fold 1 meta-model weights": {
+      "intercept": -3.500749331503083,
+      "LR": 1.585791419693598,
+      "KNN": 0.049088762984424036,
+      "RF": 6.442538303369531,
+      "SVM": 0.0
+    },
+    "patient-CV fold 2 stacking": {
+      "cv_folds": 5,
+      "meta_model": "LogisticRegression(C=1.0), weights beta_k >= 0",
+      "meta_features": [
+        "LR",
+        "KNN",
+        "RF",
+        "SVM"
+      ],
+      "referral_band": [
+        0.35,
+        0.65
+      ],
+      "grouped_cv": true
+    },
+    "patient-CV fold 2 meta-model weights": {
+      "intercept": -3.415372482039555,
+      "LR": 0.6179503484516568,
+      "KNN": 0.0,
+      "RF": 7.219484777176931,
+      "SVM": 0.0
+    },
+    "patient-CV fold 3 stacking": {
+      "cv_folds": 5,
+      "meta_model": "LogisticRegression(C=1.0), weights beta_k >= 0",
+      "meta_features": [
+        "LR",
+        "KNN",
+        "RF",
+        "SVM"
+      ],
+      "referral_band": [
+        0.35,
+        0.65
+      ],
+      "grouped_cv": true
+    },
+    "patient-CV fold 3 meta-model weights": {
+      "intercept": -3.2873335768146656,
+      "LR": 0.3819281106374475,
+      "KNN": 0.0,
+      "RF": 7.468598632943624,
+      "SVM": 0.0
+    },
+    "patient-CV fold 4 stacking": {
+      "cv_folds": 5,
+      "meta_model": "LogisticRegression(C=1.0), weights beta_k >= 0",
+      "meta_features": [
+        "LR",
+        "KNN",
+        "RF",
+        "SVM"
+      ],
+      "referral_band": [
+        0.35,
+        0.65
+      ],
+      "grouped_cv": true
+    },
+    "patient-CV fold 4 meta-model weights": {
+      "intercept": -3.1531902097397286,
+      "LR": 1.6498655546818675,
+      "KNN": 0.0,
+      "RF": 5.928240643535361,
+      "SVM": 0.0
+    },
+    "patient-CV fold 5 stacking": {
+      "cv_folds": 5,
+      "meta_model": "LogisticRegression(C=1.0), weights beta_k >= 0",
+      "meta_features": [
+        "LR",
+        "KNN",
+        "RF",
+        "SVM"
+      ],
+      "referral_band": [
+        0.35,
+        0.65
+      ],
+      "grouped_cv": true
+    },
+    "patient-CV fold 5 meta-model weights": {
+      "intercept": -3.5816607409738976,
+      "LR": 1.942473095898521,
+      "KNN": 0.23499019217731523,
+      "RF": 5.225524899791791,
+      "SVM": 0.808734999380981
+    }
+  },
+  "lineage": [
+    {
+      "step": "Segment beats (mitdb)",
+      "rows_before": 0,
+      "rows_after": 100630,
+      "detail": "44 records read, 4 paced records excluded (102, 104, 107, 217)",
+      "removed": -100630
+    },
+    {
+      "step": "Segment beats (svdb)",
+      "rows_before": 0,
+      "rows_after": 184347,
+      "detail": "78 records read, 0 paced records excluded (none)",
+      "removed": -184347
+    },
+    {
+      "step": "Remove non-finite values",
+      "rows_before": 284977,
+      "rows_after": 284977,
+      "detail": "NaN or infinite values in any numeric column",
+      "removed": 0
+    },
+    {
+      "step": "Filter implausible RR intervals (20-300 bpm)",
+      "rows_before": 284977,
+      "rows_after": 284887,
+      "detail": "pre_rr outside [0.2, 3.0]: 44; post_rr outside [0.2, 3.0]: 46",
+      "removed": 90
+    },
+    {
+      "step": "Balance classes (random undersampling)",
+      "rows_before": 284887,
+      "rows_after": 65414,
+      "detail": "class counts {0: 252180, 1: 32707} -> {0: 32707, 1: 32707}",
+      "removed": 219473
+    },
+    {
+      "step": "Stratified train/test split",
+      "rows_before": 65414,
+      "rows_after": 52331,
+      "detail": "train 52,331 / test 13,083 (20% held out, seed 42)",
+      "removed": 13083
+    }
+  ],
+  "metrics": {
+    "tuning Logistic Regression": {
+      "cv_accuracy": 0.9000375995955497,
+      "tuning_rows": 12000.0
+    },
+    "tuning K-Nearest Neighbors": {
+      "cv_accuracy": 0.8013938391104155,
+      "tuning_rows": 12000.0
+    },
+    "tuning Random Forest": {
+      "cv_accuracy": 0.8983381570565468,
+      "tuning_rows": 12000.0
+    },
+    "tuning Support Vector Machine": {
+      "cv_accuracy": 0.882368770890797,
+      "tuning_rows": 12000.0
+    },
+    "training time LR": {
+      "oof_seconds": 2.9379704160000983,
+      "final_fit_seconds": 0.3527317090010911,
+      "rows_used_final_fit": 52331.0
+    },
+    "training time KNN": {
+      "oof_seconds": 1.8350829999999405,
+      "final_fit_seconds": 0.03605704199981119,
+      "rows_used_final_fit": 52331.0
+    },
+    "training time RF": {
+      "oof_seconds": 53.822454999999536,
+      "final_fit_seconds": 11.104990833000556,
+      "rows_used_final_fit": 52331.0
+    },
+    "training time SVM": {
+      "oof_seconds": 57.226494915999865,
+      "final_fit_seconds": 5.853404749999754,
+      "rows_used_final_fit": 20000.0
+    },
+    "Logistic Regression": {
+      "accuracy": 0.9328900099365589,
+      "balanced_accuracy": 0.9328891916197205,
+      "precision": 0.9423527573816591,
+      "recall_sensitivity": 0.9221831524231768,
+      "specificity": 0.9435952308162642,
+      "f1": 0.9321588626178334,
+      "roc_auc": 0.9788706197733731,
+      "pr_auc": 0.9783395566127621,
+      "mcc": 0.8659781482818544,
+      "brier": 0.0506190091977118,
+      "tp": 6032.0,
+      "fp": 369.0,
+      "tn": 6173.0,
+      "fn": 509.0
+    },
+    "K-Nearest Neighbors": {
+      "accuracy": 0.9584193227852938,
+      "balanced_accuracy": 0.9584183760865721,
+      "precision": 0.9700580028217589,
+      "recall_sensitivity": 0.9460327167099832,
+      "specificity": 0.9708040354631611,
+      "f1": 0.9578947368421052,
+      "roc_auc": 0.9916722055752463,
+      "pr_auc": 0.990681257583153,
+      "mcc": 0.9171197681832465,
+      "brier": 0.032350762915951146,
+      "tp": 6188.0,
+      "fp": 191.0,
+      "tn": 6351.0,
+      "fn": 353.0
+    },
+    "Random Forest": {
+      "accuracy": 0.9740120767408087,
+      "balanced_accuracy": 0.9740124738667196,
+      "precision": 0.9691330004539265,
+      "recall_sensitivity": 0.9792080721602201,
+      "specificity": 0.9688168755732192,
+      "f1": 0.9741444866920153,
+      "roc_auc": 0.9958724478585819,
+      "pr_auc": 0.9957101942032592,
+      "mcc": 0.948075420077895,
+      "brier": 0.022919292012081094,
+      "tp": 6405.0,
+      "fp": 204.0,
+      "tn": 6338.0,
+      "fn": 136.0
+    },
+    "Support Vector Machine": {
+      "accuracy": 0.9431323091034166,
+      "balanced_accuracy": 0.9431312922075467,
+      "precision": 0.9552379456572955,
+      "recall_sensitivity": 0.929827243540743,
+      "specificity": 0.9564353408743503,
+      "f1": 0.9423613263092656,
+      "roc_auc": 0.983150960260027,
+      "pr_auc": 0.9839159090500134,
+      "mcc": 0.8865780826138887,
+      "brier": 0.04233442844646626,
+      "tp": 6082.0,
+      "fp": 285.0,
+      "tn": 6257.0,
+      "fn": 459.0
+    },
+    "Hard voting": {
+      "accuracy": 0.9649927386685011,
+      "balanced_accuracy": 0.9649926216175831,
+      "precision": 0.9664161938353013,
+      "recall_sensitivity": 0.9634612444580339,
+      "specificity": 0.9665239987771324,
+      "f1": 0.9649364568978717,
+      "roc_auc": NaN,
+      "pr_auc": NaN,
+      "mcc": 0.9299898072165066,
+      "brier": NaN,
+      "tp": 6302.0,
+      "fp": 219.0,
+      "tn": 6323.0,
+      "fn": 239.0
+    },
+    "Soft voting": {
+      "accuracy": 0.9649163036000917,
+      "balanced_accuracy": 0.964916169021768,
+      "precision": 0.9665541577170911,
+      "recall_sensitivity": 0.9631554808133312,
+      "specificity": 0.9666768572302048,
+      "f1": 0.9648518263266712,
+      "roc_auc": 0.9938034020154881,
+      "pr_auc": 0.9936760365660737,
+      "mcc": 0.9298383354466537,
+      "brier": 0.0295468114380626,
+      "tp": 6300.0,
+      "fp": 218.0,
+      "tn": 6324.0,
+      "fn": 241.0
+    },
+    "Stacking ensemble": {
+      "accuracy": 0.9686616219521517,
+      "balanced_accuracy": 0.9686625331709386,
+      "precision": 0.9577422726593997,
+      "recall_sensitivity": 0.9805840085613821,
+      "specificity": 0.9567410577804952,
+      "f1": 0.9690285541622602,
+      "roc_auc": 0.9950273212576168,
+      "pr_auc": 0.9948696178689922,
+      "mcc": 0.9375900053741802,
+      "brier": 0.024669347138615884,
+      "tp": 6414.0,
+      "fp": 283.0,
+      "tn": 6259.0,
+      "fn": 127.0
+    },
+    "system summary": {
+      "stacking_accuracy": 0.9686616219521517,
+      "accuracy_95ci_low": 0.9656042192157762,
+      "accuracy_95ci_high": 0.9717954597569365,
+      "best_base_model": "Random Forest",
+      "mcnemar_vs_best_base_p": 4.825421503937195e-13,
+      "referral_rate": 0.03982267064129023,
+      "accuracy_on_non_referred": 0.9780289762776628,
+      "meets_95_target": 1.0
+    },
+    "leakage audit (beat-level split)": {
+      "test_beats_from_training_patients": 1.0,
+      "nearest_training_beat_same_patient": 0.944,
+      "patients_in_train": 121.0,
+      "patients_in_test": 121.0
+    },
+    "patient-CV fold 1 training time LR": {
+      "oof_seconds": 2.2738145839994104,
+      "final_fit_seconds": 0.2797707909994642,
+      "rows_used_final_fit": 52658.0
+    },
+    "patient-CV fold 1 training time KNN": {
+      "oof_seconds": 1.598009916000592,
+      "final_fit_seconds": 0.018727667000348447,
+      "rows_used_final_fit": 52658.0
+    },
+    "patient-CV fold 1 training time RF": {
+      "oof_seconds": 51.18332724999891,
+      "final_fit_seconds": 10.742509167001117,
+      "rows_used_final_fit": 52658.0
+    },
+    "patient-CV fold 1 training time SVM": {
+      "oof_seconds": 50.532436208000945,
+      "final_fit_seconds": 5.055533374999868,
+      "rows_used_final_fit": 20000.0
+    },
+    "patient-CV fold 2 training time LR": {
+      "oof_seconds": 2.091471666999496,
+      "final_fit_seconds": 0.2976850420000119,
+      "rows_used_final_fit": 53072.0
+    },
+    "patient-CV fold 2 training time KNN": {
+      "oof_seconds": 1.6676581669998995,
+      "final_fit_seconds": 0.026347625000198605,
+      "rows_used_final_fit": 53072.0
+    },
+    "patient-CV fold 2 training time RF": {
+      "oof_seconds": 51.74080200000026,
+      "final_fit_seconds": 10.874783541999932,
+      "rows_used_final_fit": 53072.0
+    },
+    "patient-CV fold 2 training time SVM": {
+      "oof_seconds": 57.30613679199996,
+      "final_fit_seconds": 5.8392801669997425,
+      "rows_used_final_fit": 20000.0
+    },
+    "patient-CV fold 3 training time LR": {
+      "oof_seconds": 2.835371417000715,
+      "final_fit_seconds": 0.5171251659994596,
+      "rows_used_final_fit": 52512.0
+    },
+    "patient-CV fold 3 training time KNN": {
+      "oof_seconds": 1.565534375000425,
+      "final_fit_seconds": 0.01806008299899986,
+      "rows_used_final_fit": 52512.0
+    },
+    "patient-CV fold 3 training time RF": {
+      "oof_seconds": 51.054227415999776,
+      "final_fit_seconds": 10.71478983400084,
+      "rows_used_final_fit": 52512.0
+    },
+    "patient-CV fold 3 training time SVM": {
+      "oof_seconds": 58.23757937500159,
+      "final_fit_seconds": 5.925065542000084,
+      "rows_used_final_fit": 20000.0
+    },
+    "patient-CV fold 4 training time LR": {
+      "oof_seconds": 2.587864790999447,
+      "final_fit_seconds": 0.5055221659986273,
+      "rows_used_final_fit": 52556.0
+    },
+    "patient-CV fold 4 training time KNN": {
+      "oof_seconds": 1.923440833999848,
+      "final_fit_seconds": 0.016197375000047032,
+      "rows_used_final_fit": 52556.0
+    },
+    "patient-CV fold 4 training time RF": {
+      "oof_seconds": 44.25527850000071,
+      "final_fit_seconds": 9.088307084000917,
+      "rows_used_final_fit": 52556.0
+    },
+    "patient-CV fold 4 training time SVM": {
+      "oof_seconds": 52.22603833300127,
+      "final_fit_seconds": 5.322885042000053,
+      "rows_used_final_fit": 20000.0
+    },
+    "patient-CV fold 5 training time LR": {
+      "oof_seconds": 1.3426481249989592,
+      "final_fit_seconds": 0.24142720800045936,
+      "rows_used_final_fit": 50858.0
+    },
+    "patient-CV fold 5 training time KNN": {
+      "oof_seconds": 2.364477041999635,
+      "final_fit_seconds": 0.017581916999915848,
+      "rows_used_final_fit": 50858.0
+    },
+    "patient-CV fold 5 training time RF": {
+      "oof_seconds": 42.375728958000764,
+      "final_fit_seconds": 8.795009540999672,
+      "rows_used_final_fit": 50858.0
+    },
+    "patient-CV fold 5 training time SVM": {
+      "oof_seconds": 48.45661629099959,
+      "final_fit_seconds": 4.984084416999394,
+      "rows_used_final_fit": 20000.0
+    },
+    "patient-wise CV K-Nearest Neighbors": {
+      "accuracy_mean": 0.8130859856686452,
+      "accuracy_std": 0.05145644413841699,
+      "recall_sensitivity_mean": 0.7381302739179733,
+      "recall_sensitivity_std": 0.10306082195009164,
+      "specificity_mean": 0.8880416974193173,
+      "specificity_std": 0.06855943228617112,
+      "roc_auc_mean": 0.8878367080028721,
+      "roc_auc_std": 0.04191208018113704,
+      "natural_accuracy_mean": 0.9230164640057866,
+      "natural_accuracy_std": 0.035984612925348144,
+      "natural_balanced_accuracy_mean": 0.7701975815365425,
+      "natural_balanced_accuracy_std": 0.06563877698752979
+    },
+    "patient-wise CV Logistic Regression": {
+      "accuracy_mean": 0.9139538398568188,
+      "accuracy_std": 0.04513124674215368,
+      "recall_sensitivity_mean": 0.8889125493581854,
+      "recall_sensitivity_std": 0.0950760092164486,
+      "specificity_mean": 0.9389951303554523,
+      "specificity_std": 0.011227785350536701,
+      "roc_auc_mean": 0.9609397886957373,
+      "roc_auc_std": 0.027836621176584597,
+      "natural_accuracy_mean": 0.9452051370589075,
+      "natural_accuracy_std": 0.01909061840875176,
+      "natural_balanced_accuracy_mean": 0.8420737886652102,
+      "natural_balanced_accuracy_std": 0.06938851748225983
+    },
+    "patient-wise CV Random Forest": {
+      "accuracy_mean": 0.8945362254386735,
+      "accuracy_std": 0.06359397761485108,
+      "recall_sensitivity_mean": 0.8413063808244402,
+      "recall_sensitivity_std": 0.11958203217294067,
+      "specificity_mean": 0.9477660700529068,
+      "specificity_std": 0.009900361049180005,
+      "roc_auc_mean": 0.9688001415667051,
+      "roc_auc_std": 0.020370318116952512,
+      "natural_accuracy_mean": 0.9457576715358167,
+      "natural_accuracy_std": 0.023990186461307437,
+      "natural_balanced_accuracy_mean": 0.7914378520069149,
+      "natural_balanced_accuracy_std": 0.0773031249228283
+    },
+    "patient-wise CV Stacking ensemble": {
+      "accuracy_mean": 0.9046261950320993,
+      "accuracy_std": 0.04421094779175795,
+      "recall_sensitivity_mean": 0.8789360740761989,
+      "recall_sensitivity_std": 0.08536108281038028,
+      "specificity_mean": 0.9303163159879997,
+      "specificity_std": 0.01674114942028671,
+      "roc_auc_mean": 0.9694554191373724,
+      "roc_auc_std": 0.020195386772887017,
+      "natural_accuracy_mean": 0.9524625336856563,
+      "natural_accuracy_std": 0.020280423779891914,
+      "natural_balanced_accuracy_mean": 0.8794148385295554,
+      "natural_balanced_accuracy_std": 0.06718968551295086
+    },
+    "patient-wise CV Support Vector Machine": {
+      "accuracy_mean": 0.8902705212137463,
+      "accuracy_std": 0.0523997983939576,
+      "recall_sensitivity_mean": 0.8368132501534268,
+      "recall_sensitivity_std": 0.10165368687307991,
+      "specificity_mean": 0.9437277922740659,
+      "specificity_std": 0.011356431258033026,
+      "roc_auc_mean": 0.9598456806895761,
+      "roc_auc_std": 0.02360801326963362,
+      "natural_accuracy_mean": 0.949749920314338,
+      "natural_accuracy_std": 0.023162614964763826,
+      "natural_balanced_accuracy_mean": 0.8453775313521437,
+      "natural_balanced_accuracy_std": 0.07183609965727084
+    },
+    "automatic detection (unseen patients)": {
+      "detection_sensitivity": 0.9953491687307329,
+      "detection_ppv": 0.9936140313428322,
+      "classified_beats": 55741.0,
+      "accuracy": 0.943040132039253,
+      "balanced_accuracy": 0.880535135841437,
+      "recall_sensitivity": 0.800032097576633,
+      "specificity": 0.9610381741062411,
+      "roc_auc": 0.9407648267092291
+    },
+    "monitoring session (unseen patient)": {
+      "record": "mitdb_201",
+      "beats": 1881.0,
+      "true_abnormal_burden": 0.13450292397660818,
+      "predicted_abnormal_burden": 0.23976608187134502,
+      "beat_accuracy": 0.8351940457203615
+    }
+  },
+  "figures": [
+    {
+      "number": 1,
+      "file": "fig_01_ecg_etl_example.png",
+      "slug": "ecg_etl_example",
+      "caption": "ETL of an unstructured ECG signal: raw vs. filtered/resampled (MIT-BIH 208)",
+      "guide": {
+        "title": {
+          "es": "Del ECG crudo a datos limpios (ETL)",
+          "en": "From raw ECG to clean data (ETL)"
+        },
+        "what": {
+          "es": "Arriba la se\u00f1al original con ruido y l\u00ednea base que se mueve; abajo la se\u00f1al filtrada (0,5\u201340 Hz) y remuestreada a 128 Hz, con la etiqueta del cardi\u00f3logo en cada latido.",
+          "en": "Top: the original signal with noise and wandering baseline; bottom: the filtered (0.5\u201340 Hz) and resampled 128 Hz signal, with the cardiologist's label on each beat."
+        },
+        "read": {
+          "es": "Las letras rojas son latidos anormales (V ventricular, A/S supraventricular, F fusi\u00f3n). As\u00ed una se\u00f1al no estructurada se vuelve filas de una tabla.",
+          "en": "Red letters are abnormal beats (V ventricular, A/S supraventricular, F fusion). This is how an unstructured signal becomes table rows."
+        }
+      }
+    },
+    {
+      "number": 2,
+      "file": "fig_02_cleaning_funnel.png",
+      "slug": "cleaning_funnel",
+      "caption": "Rows (beats) remaining after each ETL step",
+      "guide": {
+        "title": {
+          "es": "Trazabilidad: filas que quedan en cada paso",
+          "en": "Traceability: rows left after each step"
+        },
+        "what": {
+          "es": "Cada barra es el conjunto de datos despu\u00e9s de un paso de limpieza; entre par\u00e9ntesis, cu\u00e1ntas filas quit\u00f3 ese paso.",
+          "en": "Each bar is the dataset after one cleaning step; in brackets, how many rows that step removed."
+        },
+        "read": {
+          "es": "L\u00e9ela de arriba hacia abajo. Ninguna fila desaparece sin explicaci\u00f3n: el motivo de cada paso est\u00e1 en TRACEABILITY.md.",
+          "en": "Read it top to bottom. No row disappears without a reason: each step is explained in TRACEABILITY.md."
+        }
+      }
+    },
+    {
+      "number": 3,
+      "file": "fig_03_beat_counts.png",
+      "slug": "beat_counts",
+      "caption": "Heartbeats per database and AAMI class before balancing",
+      "guide": {
+        "title": {
+          "es": "Latidos por tipo y base de datos",
+          "en": "Beats per type and database"
+        },
+        "what": {
+          "es": "Cantidad de latidos de cada clase AAMI (N normal, S supraventricular, V ventricular, F fusi\u00f3n), en escala logar\u00edtmica.",
+          "en": "Number of beats of each AAMI class (N normal, S supraventricular, V ventricular, F fusion), on a log scale."
+        },
+        "read": {
+          "es": "Cada marca del eje es \u00d710. Los normales son la gran mayor\u00eda: por eso hay que balancear.",
+          "en": "Each axis tick is \u00d710. Normal beats are the vast majority: that is why balancing is needed."
+        }
+      }
+    },
+    {
+      "number": 4,
+      "file": "fig_04_class_balance.png",
+      "slug": "class_balance",
+      "caption": "Class balance before and after undersampling",
+      "guide": {
+        "title": {
+          "es": "Balance de clases antes y despu\u00e9s",
+          "en": "Class balance before and after"
+        },
+        "what": {
+          "es": "Cu\u00e1ntos casos hay de cada clase. Se toman todos los de la clase menos frecuente y la misma cantidad, al azar, de la m\u00e1s frecuente (submuestreo).",
+          "en": "How many cases of each class there are. All cases of the rarer class are kept and the same number is drawn at random from the common one (undersampling)."
+        },
+        "read": {
+          "es": "A la derecha las dos barras deben medir igual (50/50). As\u00ed la exactitud no se infla respondiendo siempre la clase com\u00fan.",
+          "en": "On the right both bars must be equal (50/50). Accuracy cannot then be inflated by always answering the common class."
+        }
+      }
+    },
+    {
+      "number": 5,
+      "file": "fig_05_mean_beats.png",
+      "slug": "mean_beats",
+      "caption": "Mean beat shape per AAMI class",
+      "guide": {
+        "title": {
+          "es": "Forma promedio de cada tipo de latido",
+          "en": "Average shape of each beat type"
+        },
+        "what": {
+          "es": "Promedio \u00b1 1 desviaci\u00f3n est\u00e1ndar de la forma del latido; el tiempo 0 es el pico R.",
+          "en": "Mean \u00b1 1 standard deviation of the beat shape; time 0 is the R peak."
+        },
+        "read": {
+          "es": "El ventricular (V) es ancho y deforme. El supraventricular (S) se parece al normal: por eso tambi\u00e9n se usa el ritmo (cu\u00e1ndo llega).",
+          "en": "The ventricular beat (V) is wide and deformed. The supraventricular (S) looks normal: that is why rhythm (when it arrives) is also used."
+        }
+      }
+    },
+    {
+      "number": 6,
+      "file": "fig_06_rr_features.png",
+      "slug": "rr_features",
+      "caption": "RR and amplitude features by class",
+      "guide": {
+        "title": {
+          "es": "Ritmo y forma: normal vs. anormal",
+          "en": "Rhythm and shape: normal vs. abnormal"
+        },
+        "what": {
+          "es": "Violines de las variables de ritmo (intervalos RR), amplitud y comparaci\u00f3n con el latido habitual del paciente.",
+          "en": "Violins of the rhythm (RR interval), amplitude and patient-relative features."
+        },
+        "read": {
+          "es": "Ejemplo: los anormales tienen rr_ratio < 1 (llegan antes de tiempo) y menor parecido con el latido habitual (template_corr).",
+          "en": "Example: abnormal beats have rr_ratio < 1 (they arrive early) and lower similarity to the usual beat (template_corr)."
+        }
+      }
+    },
+    {
+      "number": 7,
+      "file": "fig_07_distributions.png",
+      "slug": "distributions",
+      "caption": "Histograms and KDE of rhythm features by class",
+      "guide": {
+        "title": {
+          "es": "Distribuci\u00f3n de las variables de ritmo por clase",
+          "en": "Distribution of rhythm features by class"
+        },
+        "what": {
+          "es": "Histograma + curva KDE de las variables de ritmo y de parecido con el latido habitual.",
+          "en": "Histogram + KDE curve of the rhythm and similarity-to-usual-beat features."
+        },
+        "read": {
+          "es": "Las curvas separadas indican variables que distinguen latidos normales de anormales.",
+          "en": "Curves that sit apart mark features that tell normal from abnormal beats."
+        }
+      }
+    },
+    {
+      "number": 8,
+      "file": "fig_08_correlations.png",
+      "slug": "correlations",
+      "caption": "Pearson vs. Spearman correlation of rhythm features",
+      "guide": {
+        "title": {
+          "es": "Correlaciones de Pearson y Spearman",
+          "en": "Pearson and Spearman correlations"
+        },
+        "what": {
+          "es": "Pearson mide relaci\u00f3n lineal; Spearman, relaci\u00f3n ordenada (usa rangos y resiste at\u00edpicos). Valores de \u22121 a 1.",
+          "en": "Pearson measures linear association; Spearman, ordered association (uses ranks, robust to outliers). From \u22121 to 1."
+        },
+        "read": {
+          "es": "Rojo: suben juntas. Azul: una sube y la otra baja. Blanco: sin relaci\u00f3n. Mira la fila de la variable objetivo.",
+          "en": "Red: they rise together. Blue: one rises as the other falls. White: no relation. Look at the target's row."
+        }
+      }
+    },
+    {
+      "number": 9,
+      "file": "fig_09_vif_rhythm_features.png",
+      "slug": "vif_rhythm_features",
+      "caption": "Multicollinearity of the rhythm features (VIF)",
+      "guide": {
+        "title": {
+          "es": "Multicolinealidad de las variables de ritmo",
+          "en": "Multicollinearity of the rhythm features"
+        },
+        "what": {
+          "es": "VIF = 1 / (1 \u2212 R\u00b2) de las variables de ritmo y amplitud.",
+          "en": "VIF = 1 / (1 \u2212 R\u00b2) of the rhythm and amplitude features."
+        },
+        "read": {
+          "es": "Verde < 5 bien, rojo > 10 grave. Los modelos de \u00e1rboles y la regularizaci\u00f3n toleran la redundancia moderada.",
+          "en": "Green < 5 fine, red > 10 severe. Tree models and regularisation tolerate moderate redundancy."
+        }
+      }
+    },
+    {
+      "number": 10,
+      "file": "fig_10_pca_projection.png",
+      "slug": "pca_projection",
+      "caption": "2-D PCA projection of all beat features by class",
+      "guide": {
+        "title": {
+          "es": "Mapa 2D de los datos (PCA)",
+          "en": "2-D map of the data (PCA)"
+        },
+        "what": {
+          "es": "PCA resume todas las variables en dos ejes que conservan la mayor variaci\u00f3n posible.",
+          "en": "PCA summarises all variables in two axes that keep as much variation as possible."
+        },
+        "read": {
+          "es": "Si los colores forman nubes separadas, las clases son f\u00e1ciles de distinguir; si se mezclan, el problema es dif\u00edcil.",
+          "en": "If the colours form separate clouds, the classes are easy to separate; if they mix, the problem is hard."
+        }
+      }
+    },
+    {
+      "number": 11,
+      "file": "fig_11_metric_comparison.png",
+      "slug": "metric_comparison",
+      "caption": "Test-set metrics of the four base models, voting schemes and the stacking ensemble",
+      "guide": {
+        "title": {
+          "es": "M\u00e9tricas de cada modelo en el conjunto de prueba",
+          "en": "Metrics of each model on the test set"
+        },
+        "what": {
+          "es": "Exactitud, precisi\u00f3n, sensibilidad, especificidad, F1 y AUC en latidos de prueba que no se usaron para entrenar, pero de pacientes que s\u00ed aportaron otros latidos (divisi\u00f3n por latido).",
+          "en": "Accuracy, precision, sensitivity, specificity, F1 and AUC on test beats not used for training, but from patients who did give other beats to training (split by beat)."
+        },
+        "read": {
+          "es": "M\u00e1s alto es mejor; la l\u00ednea roja es la meta del 95 %. Es la evaluaci\u00f3n oficial (protocolo est\u00e1ndar de MIT-BIH). El an\u00e1lisis adicional con pacientes totalmente nuevos est\u00e1 en la figura \u00abPrueba de fuga\u00bb.",
+          "en": "Higher is better; the red line is the 95 % target. This is the official evaluation (standard MIT-BIH protocol). The additional analysis on completely new patients is in the 'Leakage check' figure."
+        }
+      }
+    },
+    {
+      "number": 12,
+      "file": "fig_12_confusion_matrices.png",
+      "slug": "confusion_matrices",
+      "caption": "Confusion matrices on the held-out test set",
+      "guide": {
+        "title": {
+          "es": "Matrices de confusi\u00f3n: aciertos y errores",
+          "en": "Confusion matrices: hits and errors"
+        },
+        "what": {
+          "es": "Tabla 2\u00d72 por modelo: filas = verdad, columnas = predicci\u00f3n. Cada fila suma 100 %.",
+          "en": "2\u00d72 table per model: rows = truth, columns = prediction. Each row adds up to 100 %."
+        },
+        "read": {
+          "es": "La diagonal son los aciertos. La celda de abajo a la izquierda son los enfermos que el modelo no detect\u00f3: es el error m\u00e1s peligroso.",
+          "en": "The diagonal holds the hits. The bottom-left cell is the sick cases the model missed: the most dangerous error."
+        }
+      }
+    },
+    {
+      "number": 13,
+      "file": "fig_13_roc_pr_curves.png",
+      "slug": "roc_pr_curves",
+      "caption": "ROC and precision-recall curves",
+      "guide": {
+        "title": {
+          "es": "Curvas ROC y precisi\u00f3n-sensibilidad",
+          "en": "ROC and precision-recall curves"
+        },
+        "what": {
+          "es": "C\u00f3mo cambian aciertos y falsas alarmas al mover el umbral de decisi\u00f3n. El \u00e1rea bajo la curva (AUC) resume la calidad.",
+          "en": "How hits and false alarms change as the decision threshold moves. The area under the curve (AUC) sums it up."
+        },
+        "read": {
+          "es": "Una curva pegada a la esquina superior izquierda (ROC) o superior derecha (PR) es mejor. La diagonal punteada es azar (AUC 0,5).",
+          "en": "A curve hugging the top-left (ROC) or top-right (PR) corner is better. The dotted diagonal is chance (AUC 0.5)."
+        }
+      }
+    },
+    {
+      "number": 14,
+      "file": "fig_14_calibration.png",
+      "slug": "calibration",
+      "caption": "Reliability of the predicted probabilities",
+      "guide": {
+        "title": {
+          "es": "\u00bfLas probabilidades dicen la verdad? (calibraci\u00f3n)",
+          "en": "Do the probabilities tell the truth? (calibration)"
+        },
+        "what": {
+          "es": "Se agrupan los casos por probabilidad predicha y se compara con el porcentaje real de positivos.",
+          "en": "Cases are grouped by predicted probability and compared with the real share of positives."
+        },
+        "read": {
+          "es": "Sobre la diagonal, \u00ab70 %\u00bb significa que de verdad 7 de cada 10 casos as\u00ed son positivos. Por debajo, el modelo exagera.",
+          "en": "On the diagonal, '70 %' really means 7 out of 10 such cases are positive. Below it, the model over-estimates."
+        }
+      }
+    },
+    {
+      "number": 15,
+      "file": "fig_15_meta_weights.png",
+      "slug": "meta_weights",
+      "caption": "Coefficients learned by the meta-model for each base model",
+      "guide": {
+        "title": {
+          "es": "Cu\u00e1nto conf\u00eda el sistema en cada modelo",
+          "en": "How much the system trusts each model"
+        },
+        "what": {
+          "es": "Pesos \u03b2 que aprendi\u00f3 el meta-modelo: P = \u03c3(\u03b2\u2080 + \u03a3 \u03b2\u2096\u00b7p\u2096). Son \u2265 0 por dise\u00f1o.",
+          "en": "Weights \u03b2 learned by the meta-model: P = \u03c3(\u03b2\u2080 + \u03a3 \u03b2\u2096\u00b7p\u2096). They are \u2265 0 by design."
+        },
+        "read": {
+          "es": "Barra m\u00e1s alta = el resultado final escucha m\u00e1s a ese modelo. Un peso 0 significa que su informaci\u00f3n ya la aportan los otros.",
+          "en": "Taller bar = the final answer listens more to that model. A weight of 0 means the others already carry its information."
+        }
+      }
+    },
+    {
+      "number": 16,
+      "file": "fig_16_model_diversity.png",
+      "slug": "model_diversity",
+      "caption": "Diversity between base models (OOF correlation and disagreement)",
+      "guide": {
+        "title": {
+          "es": "\u00bfLos 4 modelos piensan distinto?",
+          "en": "Do the 4 models think differently?"
+        },
+        "what": {
+          "es": "Izquierda: correlaci\u00f3n entre las probabilidades de cada par de modelos. Derecha: % de casos en que discrepan.",
+          "en": "Left: correlation between the probabilities of each pair of models. Right: % of cases where they disagree."
+        },
+        "read": {
+          "es": "Combinar modelos solo ayuda si a veces discrepan: correlaciones menores a 1 y desacuerdos mayores a 0 indican modelos complementarios.",
+          "en": "Combining models only helps if they sometimes disagree: correlations below 1 and non-zero disagreement mean complementary models."
+        }
+      }
+    },
+    {
+      "number": 17,
+      "file": "fig_17_probability_distribution.png",
+      "slug": "probability_distribution",
+      "caption": "Distribution of the final probability per true class and referral band",
+      "guide": {
+        "title": {
+          "es": "Probabilidad final seg\u00fan la clase real",
+          "en": "Final probability by true class"
+        },
+        "what": {
+          "es": "Histograma de la probabilidad que da el sistema, un color por clase real. La franja gris es la zona de duda.",
+          "en": "Histogram of the system's probability, one colour per true class. The grey band is the doubt zone."
+        },
+        "read": {
+          "es": "Lo ideal: un color pegado a 0 y el otro a 1. Donde los colores se cruzan est\u00e1n los errores; los casos en la franja gris se remiten al m\u00e9dico.",
+          "en": "Ideal: one colour near 0 and the other near 1. Errors live where colours overlap; cases in the grey band go to a clinician."
+        }
+      }
+    },
+    {
+      "number": 18,
+      "file": "fig_18_coverage_curve.png",
+      "slug": "coverage_curve",
+      "caption": "Accuracy when the system answers only its most confident cases",
+      "guide": {
+        "title": {
+          "es": "Exactitud si el sistema solo responde lo que tiene claro",
+          "en": "Accuracy if the system only answers clear cases"
+        },
+        "what": {
+          "es": "Se ordenan los casos de m\u00e1s a menos seguros; para cada porcentaje respondido (cobertura) se calcula la exactitud.",
+          "en": "Cases are sorted from most to least confident; for each share answered (coverage) the accuracy is computed."
+        },
+        "read": {
+          "es": "Hacia la izquierda el sistema responde menos casos y acierta m\u00e1s. Donde la curva cruza la l\u00ednea del 95 % se lee qu\u00e9 parte de los casos puede resolverse sola con esa exactitud.",
+          "en": "Towards the left the system answers fewer cases and gets more right. Where the curve crosses the 95 % line tells which share of cases it can solve on its own at that accuracy."
+        }
+      }
+    },
+    {
+      "number": 19,
+      "file": "fig_19_permutation_importance.png",
+      "slug": "permutation_importance",
+      "caption": "Permutation importance of each feature group for the ensemble",
+      "guide": {
+        "title": {
+          "es": "\u00bfEn qu\u00e9 datos se apoya el sistema?",
+          "en": "Which inputs does the system rely on?"
+        },
+        "what": {
+          "es": "Importancia por permutaci\u00f3n: cu\u00e1nto cae la exactitud al desordenar al azar una variable.",
+          "en": "Permutation importance: how much accuracy drops when one input is randomly shuffled."
+        },
+        "read": {
+          "es": "Barra m\u00e1s larga = el sistema depende m\u00e1s de ese dato. Barras cerca de 0 = se podr\u00eda quitar sin perder exactitud.",
+          "en": "Longer bar = the system depends more on that input. Bars near 0 = it could be removed without losing accuracy."
+        }
+      }
+    },
+    {
+      "number": 20,
+      "file": "fig_20_simulation_test_beats.png",
+      "slug": "simulation_test_beats",
+      "caption": "Per-model and final probability for 12 held-out beats of every AAMI class",
+      "guide": {
+        "title": {
+          "es": "Simulaci\u00f3n: latidos del conjunto de prueba",
+          "en": "Simulation: held-out test beats"
+        },
+        "what": {
+          "es": "Latidos de cada tipo (N, S, V, F) que no se usaron para entrenar (divisi\u00f3n por latido), con la probabilidad de cada modelo y la respuesta final.",
+          "en": "Beats of each type (N, S, V, F) not used for training (split by beat), with each model's probability and the final answer."
+        },
+        "read": {
+          "es": "Azul = normal, rojo = anormal. \u00ab(WRONG)\u00bb marca los errores; los S son los m\u00e1s dif\u00edciles.",
+          "en": "Blue = normal, red = abnormal. '(WRONG)' marks the errors; S beats are the hardest."
+        }
+      }
+    },
+    {
+      "number": 21,
+      "file": "fig_21_leakage_check.png",
+      "slug": "leakage_check",
+      "caption": "Accuracy with a beat-level split (known patients) vs. patient-wise CV (new patients)",
+      "guide": {
+        "title": {
+          "es": "Prueba de fuga: \u00bfel modelo memoriza pacientes?",
+          "en": "Leakage check: does the model memorise patients?"
+        },
+        "what": {
+          "es": "Exactitud de cada modelo con dos formas de separar los datos: al azar por latido (el mismo paciente puede quedar en entrenamiento y prueba) y por paciente (los de prueba nunca se vieron).",
+          "en": "Accuracy of each model with two ways of splitting the data: at random by beat (the same patient can be in training and test) and by patient (test patients were never seen)."
+        },
+        "read": {
+          "es": "La cifra oficial es la barra gris (divisi\u00f3n por latido, el protocolo est\u00e1ndar de MIT-BIH). La barra de color es un an\u00e1lisis adicional: muestra cu\u00e1nto baja la exactitud cuando el paciente es totalmente nuevo.",
+          "en": "The official figure is the grey bar (split by beat, the standard MIT-BIH protocol). The coloured bar is an additional analysis: it shows how much accuracy drops when the patient is completely new."
+        }
+      }
+    },
+    {
+      "number": 22,
+      "file": "fig_22_patient_cv.png",
+      "slug": "patient_cv",
+      "caption": "Patient-wise 5-fold CV: accuracy per fold and recall per AAMI class",
+      "guide": {
+        "title": {
+          "es": "Validaci\u00f3n cruzada por paciente (5 particiones)",
+          "en": "Patient-wise cross-validation (5 folds)"
+        },
+        "what": {
+          "es": "Se divide a los pacientes en 5 grupos; cada vez se entrena con 4 y se prueba con el que queda, sin repetir pacientes.",
+          "en": "Patients are split into 5 groups; each time the system trains on 4 and is tested on the remaining one, never sharing patients."
+        },
+        "read": {
+          "es": "Cada punto es una partici\u00f3n. Si todos quedan cerca, el resultado no depende de qu\u00e9 pacientes tocaron en la prueba.",
+          "en": "Each dot is one fold. If they all sit close together, the result does not depend on which patients ended up in the test."
+        }
+      }
+    },
+    {
+      "number": 23,
+      "file": "fig_23_automatic_detection.png",
+      "slug": "automatic_detection",
+      "caption": "Annotated vs. automatically detected beats on unseen patients",
+      "guide": {
+        "title": {
+          "es": "Prueba de despliegue: latidos detectados autom\u00e1ticamente",
+          "en": "Deployment check: automatically detected beats"
+        },
+        "what": {
+          "es": "Compara clasificar los latidos marcados por el cardi\u00f3logo con los que encuentra el detector autom\u00e1tico (XQRS), como hace la app.",
+          "en": "Compares classifying the beats marked by the cardiologist with the ones the automatic detector (XQRS) finds, as the app does."
+        },
+        "read": {
+          "es": "Si las barras son casi iguales, la app funciona con ECG sin anotar sin perder exactitud.",
+          "en": "If both bars are almost equal, the app works on unannotated ECGs without losing accuracy."
+        }
+      }
+    },
+    {
+      "number": 24,
+      "file": "fig_24_monitoring_session.png",
+      "slug": "monitoring_session",
+      "caption": "Simulated monitoring session on unseen record mitdb_201",
+      "guide": {
+        "title": {
+          "es": "Simulaci\u00f3n de monitoreo remoto",
+          "en": "Remote-monitoring simulation"
+        },
+        "what": {
+          "es": "Un tramo del ECG de un paciente no visto, con lo que predijo el sistema en cada latido.",
+          "en": "A stretch of an unseen patient's ECG with the system's prediction for every beat."
+        },
+        "read": {
+          "es": "Azul = predicho normal, rojo = predicho anormal, X = error. Debajo de cada latido: su clase real y la probabilidad.",
+          "en": "Blue = predicted normal, red = predicted abnormal, X = error. Under each beat: its true class and the probability."
+        }
+      }
+    }
+  ],
+  "tables": [
+    {
+      "file": "beats_per_class.csv",
+      "caption": "Beats per database and AAMI class",
+      "rows": 2
+    },
+    {
+      "file": "vif_rhythm_features.csv",
+      "caption": "VIF of the rhythm features",
+      "rows": 10
+    },
+    {
+      "file": "descriptive_statistics.csv",
+      "caption": "Descriptive statistics of rhythm features",
+      "rows": 11
+    },
+    {
+      "file": "split_assignment.csv",
+      "caption": "Row-level train/test assignment",
+      "rows": 65414
+    },
+    {
+      "file": "tuning_LR.csv",
+      "caption": "Randomized search results for Logistic Regression",
+      "rows": 8
+    },
+    {
+      "file": "tuning_KNN.csv",
+      "caption": "Randomized search results for K-Nearest Neighbors",
+      "rows": 8
+    },
+    {
+      "file": "tuning_RF.csv",
+      "caption": "Randomized search results for Random Forest",
+      "rows": 8
+    },
+    {
+      "file": "tuning_SVM.csv",
+      "caption": "Randomized search results for Support Vector Machine",
+      "rows": 8
+    },
+    {
+      "file": "oof_metrics.csv",
+      "caption": "Cross-validated (out-of-fold) metrics",
+      "rows": 4
+    },
+    {
+      "file": "oof_predictions.csv",
+      "caption": "Out-of-fold probabilities used to train the meta-model",
+      "rows": 52331
+    },
+    {
+      "file": "test_metrics.csv",
+      "caption": "Held-out test metrics",
+      "rows": 7
+    },
+    {
+      "file": "permutation_importance.csv",
+      "caption": "Permutation importance of the stacking ensemble",
+      "rows": 13
+    },
+    {
+      "file": "simulation_test_beats.csv",
+      "caption": "12 test beats through the system",
+      "rows": 12
+    },
+    {
+      "file": "patient_cv_folds.csv",
+      "caption": "Patient-wise CV: metrics per fold and model (new patients)",
+      "rows": 25
+    },
+    {
+      "file": "patient_cv_per_class.csv",
+      "caption": "Patient-wise CV: recall per AAMI class",
+      "rows": 4
+    },
+    {
+      "file": "automatic_detection_per_record.csv",
+      "caption": "XQRS beat detection quality per unseen record (150 ms tolerance)",
+      "rows": 24
+    },
+    {
+      "file": "automatic_detection_metrics.csv",
+      "caption": "Classification of unseen patients: annotated vs. automatically detected beats",
+      "rows": 2
+    },
+    {
+      "file": "monitoring_session_beats.csv",
+      "caption": "Beat-by-beat predictions for record mitdb_201",
+      "rows": 1881
+    }
+  ],
+  "models": [
+    {
+      "file": "stacking_ensemble.joblib",
+      "description": "StackingEnsemble: 4 tuned base models + logistic meta-model",
+      "sha256": "bd425d60a84680fa3fcb01be81ec1d8ba3327faf1c204c8d15b5315cd7888273",
+      "bytes": 57349147
+    }
+  ],
+  "notes": [
+    "Leakage audit: 100% of the beat-level test beats come from patients also seen in training, and for 94% of them the nearest training beat is from the same patient. The beat-level accuracy therefore measures performance on KNOWN patients; patient_cv() measures it on NEW patients."
+  ]
+}

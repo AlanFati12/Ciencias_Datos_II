@@ -1,0 +1,3 @@
+param_clf__weights,param_clf__p,param_clf__n_neighbors,mean_test_score,std_test_score,rank_test_score,mean_fit_time
+uniform,2,2500,0.7105,0.006425859216218984,1,0.04161651929219564
+uniform,1,2500,0.70775,0.006451743950281986,2,0.003401041030883789
