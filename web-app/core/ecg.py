@@ -14,6 +14,13 @@ from .model_store import SAMPLE_DATA, Tier
 from cardio_ml.ecg_etl import BeatExtractor  # noqa: E402
 
 MIN_SECONDS = 20
+# "Is this an ECG?" thresholds, calibrated on 251 one-minute MIT-BIH / SVDB segments against noise, weather data
+# and synthetic waves. Real ECGs: peak prominence >= 2.5 (median 12.8), beat similarity median 0.98.
+# Non-ECG signals: prominence <= 2.4, or beats that do not look alike (similarity <= 0.35); perfectly periodic
+# waves have prominence < 1.6. Real ECGs whose beats do not look alike still have prominence >= 9.
+MIN_PEAK_PROMINENCE = 2.0      # below this the detected "peaks" do not stand out at all
+DOUBT_PEAK_PROMINENCE = 6.0    # moderate peaks are only accepted when the beats look alike
+MIN_BEAT_SIMILARITY = 0.5
 
 
 def demo_catalog() -> list[dict]:
@@ -42,8 +49,27 @@ def read_wfdb(files: dict[str, bytes]) -> tuple[np.ndarray, float, list[str]]:
         return np.nan_to_num(record.p_signal), float(record.fs), list(record.sig_name)
 
 
+def signal_quality(beats: pd.DataFrame, clean: np.ndarray, peaks: np.ndarray, fs: float, fs_clean: float) -> dict:
+    """Does the signal look like an ECG? The beat detector finds "peaks" in any signal, so check them first.
+
+    On the band-passed signal x, with r_i the detected peaks:
+        peak prominence = median_i |x(r_i)| / (1.4826 * MAD(x))   (how far the R peaks stand out of the rest;
+                                                                    1.4826 * MAD is a robust standard deviation)
+        beat similarity = median_i corr(beat_i, median beat)       (the template_corr feature)
+    An ECG has sharp R peaks and beats that look alike, even with arrhythmias; noise or unrelated data do not.
+    """
+    centers = np.round(np.asarray(peaks) * fs_clean / fs).astype(int)
+    centers = centers[(centers >= 0) & (centers < len(clean))]
+    spread = 1.4826 * np.median(np.abs(clean - np.median(clean)))
+    prominence = float(np.median(np.abs(clean[centers])) / spread) if spread > 0 and len(centers) else 0.0
+    similarity = float(beats["template_corr"].median())
+    is_ecg = prominence >= MIN_PEAK_PROMINENCE and (prominence >= DOUBT_PEAK_PROMINENCE
+                                                      or similarity >= MIN_BEAT_SIMILARITY)
+    return {"peak_prominence": prominence, "beat_similarity": similarity, "is_ecg": is_ecg}
+
+
 def analyze(tier: Tier, signal: np.ndarray, fs: float) -> dict:
-    """Detect the beats, build the features and classify them with the stacking ensemble."""
+    """Detect the beats, check that the signal is an ECG, build the features and classify the beats."""
     signal = np.asarray(signal, dtype=float)
     if len(signal) / fs < MIN_SECONDS:
         raise ValueError("too_short")
@@ -51,6 +77,9 @@ def analyze(tier: Tier, signal: np.ndarray, fs: float) -> dict:
     beats, clean, peaks = extractor.extract_signal(signal, fs)
     if len(beats) < 5:
         raise ValueError("no_beats")
+    quality = signal_quality(beats, clean, peaks, fs, extractor.fs_target)
+    if not quality["is_ecg"]:
+        raise ValueError("not_ecg")
     lo, hi = tier.schema.get("rr_valid_range_s", (0.2, 3.0))
     prior = tier.schema.get("deployment_prior")
     valid = beats["pre_rr"].between(lo, hi) & beats["post_rr"].between(lo, hi)
@@ -65,7 +94,8 @@ def analyze(tier: Tier, signal: np.ndarray, fs: float) -> dict:
     beats["referred"] = False
     beats.loc[valid, "referred"] = tier.ensemble.referral_mask(beats.loc[valid, "p"].values, Z)
     return {"beats": beats, "clean": clean, "fs_clean": extractor.fs_target, "n_before": extractor.n_before,
-            "waveform_columns": extractor.waveform_columns, "summary": summarize(beats, len(signal) / fs)}
+            "waveform_columns": extractor.waveform_columns, "quality": quality,
+            "summary": summarize(beats, len(signal) / fs)}
 
 
 def summarize(beats: pd.DataFrame, duration_s: float) -> dict:

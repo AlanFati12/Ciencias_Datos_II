@@ -264,6 +264,12 @@ T: dict[str, dict[str, str]] = {
                             "en": "The signal is too short: at least 20 seconds are needed."},
     "ecg.error.no_beats": {"es": "Se encontraron muy pocos latidos. Revisa la columna, las unidades y las muestras por segundo.",
                            "en": "Too few heartbeats were found. Check the column, the units and the samples per second."},
+    "ecg.error.not_ecg": {"es": "La señal no parece un electrocardiograma: no tiene picos de latido marcados y las formas "
+                                "encontradas no se parecen entre sí. Revisa que elegiste la columna correcta, las unidades "
+                                "y las muestras por segundo.",
+                          "en": "The signal does not look like an electrocardiogram: it has no clear heartbeat peaks and the "
+                                "shapes found do not look alike. Check that you chose the right column, the units and the "
+                                "samples per second."},
     "ecg.back": {"es": "Elegir otro ECG", "en": "Choose another ECG"},
     "ecg.tag": {"es": "Resultado del electrocardiograma", "en": "Electrocardiogram result"},
     "ecg.level.low": {"es": "Sin arritmias relevantes", "en": "No relevant arrhythmia"},

@@ -90,7 +90,15 @@ web-app/
 1. The signal is band-pass filtered (0.5–40 Hz) and resampled to 128 Hz, as in training.
 2. The beats are found by the XQRS detector (`wfdb`) and aligned to their main deflection.
 3. Each beat gets the same 100 features as in training (rhythm, amplitude, patient-relative, waveform).
-4. The 4 models and the meta-model classify every beat. The probability is corrected to the real
+4. **Is it an ECG?** The detector finds "peaks" in any signal, so before classifying, the app checks two
+   measures on the filtered signal: how far the peaks stand out (median |peak| / robust standard deviation)
+   and how much the beats look alike (median correlation with the patient's median beat). A signal with flat
+   peaks, or with weak peaks and beats that do not look alike, is rejected with a message (`signal_quality`
+   in `core/ecg.py`). The thresholds were set on 251 one-minute MIT-BIH / SVDB segments against noise,
+   unrelated data (weather readings) and synthetic waves: all of them were rejected, and so was 1 of 251 real
+   segments (a very noisy one). A train of clean, identical sharp spikes can still pass, because it looks like
+   the QRS complexes of an ECG.
+5. The 4 models and the meta-model classify every beat. The probability is corrected to the real
    prevalence of abnormal beats (prior shift, `deployment_prior` in the model schema).
 
 Accuracy: 96.9 % on the held-out test beats (standard MIT-BIH beat-level protocol), above the > 95 % target.
