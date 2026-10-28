@@ -90,6 +90,17 @@ class BaseWorkflow(ABC):
             display(Markdown("> " + text.replace("\n", "\n> ")))
         plt.close(fig)
 
+    def _save_eda_tables(self, missing: pd.DataFrame, assumptions: pd.DataFrame, frequencies: pd.DataFrame) -> None:
+        """Week-7 checklist tables: missing values, normality / homoscedasticity, categorical frequencies."""
+        self.eda_tables = {"missing_values": missing, "assumption_tests": assumptions,
+                           "categorical_frequencies": frequencies}
+        captions = {"missing_values": "Missing and non-finite values per column of the raw data",
+                    "assumption_tests": "Normality (D'Agostino-Pearson, per class) and homoscedasticity (Levene) tests",
+                    "categorical_frequencies": "Absolute and relative frequency, mode and target rate of each "
+                                               "categorical level"}
+        for name, table in self.eda_tables.items():
+            self.tracker.save_table(table, name, captions[name])
+
     @property
     def colors(self) -> dict:
         c = {m.name: m.color for m in self.models}
@@ -294,6 +305,9 @@ class ClinicalRiskWorkflow(BaseWorkflow):
                     "2-D PCA projection of the clinical features by diagnosis")
         self.tracker.save_table(df.describe().T.reset_index(names="variable"), "descriptive_statistics",
                                 "Descriptive statistics of the clean dataset")
+        categorical = ["gender", "cholesterol", "gluc", "bp_stage", "smoke", "alco", "active"]
+        self._save_eda_tables(eda.missing_values_table(self.raw), eda.assumption_tests(df, num, t),
+                              eda.frequency_table(df, categorical, t))
 
     def segment(self) -> None:
         """Hito 1 objective: K-means risk segmentation (Low / Medium / High)."""
@@ -523,6 +537,8 @@ class ECGDiagnosisWorkflow(BaseWorkflow):
                     "2-D PCA projection of all beat features by class")
         self.tracker.save_table(df[rr_cols + [t]].describe().T.reset_index(names="variable"),
                                 "descriptive_statistics", "Descriptive statistics of rhythm features")
+        self._save_eda_tables(eda.missing_values_table(self.raw), eda.assumption_tests(df, rr_cols, t),
+                              eda.frequency_table(self.unbalanced, ["aami_class", "database"], t))
 
     def leakage_check(self, n: int = 3000) -> None:
         """Does the beat-level test measure memory of known patients? (data-leakage audit)

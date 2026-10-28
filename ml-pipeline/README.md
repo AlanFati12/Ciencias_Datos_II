@@ -94,7 +94,8 @@ ml-pipeline/
 │   ├── ingestion.py           # Extraction: DataIngester (ABC) -> ClinicalCSVIngester, PhysioNetECGIngester
 │   ├── ecg_etl.py             # ECG signal -> beat table (filter, resample, segment, RR features)
 │   ├── preprocessing.py       # Transformation: BasePreprocessor (ABC) + steps + Pipeline (polymorphism)
-│   ├── eda.py                 # exploratory figures (INFOVIZ)
+│   ├── eda.py                 # exploratory figures (INFOVIZ) and EDA tables (missing values,
+│   │                          #   normality / homoscedasticity tests, categorical frequencies)
 │   ├── models.py              # BaseModel (ABC) -> LR, KNN, RF, SVM
 │   ├── ensemble.py            # StackingEnsemble: how the models combine into one answer
 │   ├── evaluation.py          # metrics, bootstrap CI, McNemar test, evaluation figures
@@ -107,6 +108,7 @@ ml-pipeline/
 │   ├── palette.py / plotting.py  # colour-blind-safe palette and shared figure style
 │   ├── report.py              # merges both tiers into outputs/RESULTS_SUMMARY.md
 │   └── workflows.py           # the two end-to-end workflows (template method)
+├── tests/                     # automated tests (pytest)
 ├── notebooks/
 │   ├── 01_clinical_risk_tier.ipynb
 │   └── 02_ecg_diagnosis_tier.ipynb
@@ -119,7 +121,7 @@ ml-pipeline/
 
 ## How to run it
 
-**Locally (Python 3.11+):**
+**Locally (tested with Python 3.14; the versions in `requirements.txt` are the ones that trained the models):**
 
 ```bash
 cd ml-pipeline
@@ -130,6 +132,7 @@ python main.py                     # both tiers (about 15-25 min)
 python main.py --tier clinical     # tier 1 only
 python main.py --tier ecg          # tier 2 only (downloads ~110 MB from PhysioNet the first time)
 python main.py --fast              # smoke test on 8,000 rows (about 1 min)
+python -m pytest                   # automated tests (a few seconds)
 ```
 
 You can also open the notebooks in `notebooks/`. They run the same steps one by one, with

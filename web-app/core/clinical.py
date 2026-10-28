@@ -19,6 +19,10 @@ FACTORS = {
     "smoking": ["smoke"], "alcohol": ["alco"], "activity": ["active"],
 }
 CATEGORICAL = {"gender", "cholesterol", "gluc", "smoke", "alco", "active"}
+# allowed codes of the categorical inputs (as in the Kaggle dataset) and the accepted age range
+LEVELS = {"gender": (1, 2), "cholesterol": (1, 2, 3), "gluc": (1, 2, 3), "smoke": (0, 1), "alco": (0, 1),
+          "active": (0, 1)}
+AGE_RANGE = (18, 100)
 
 
 def engineer(raw: pd.DataFrame) -> pd.DataFrame:
@@ -26,8 +30,21 @@ def engineer(raw: pd.DataFrame) -> pd.DataFrame:
 
 
 def validate(inputs: dict) -> tuple[list[str], list[str]]:
-    """Return (errors that block the prediction, warnings about extrapolation)."""
+    """Return (errors that block the prediction, warnings about extrapolation).
+
+    Values may come from a CSV, so they are first converted to numbers: an empty cell or a text such as
+    "alto" is an error, and so is a code outside the dataset's categories (e.g. cholesterol = 5).
+    """
     errors, warnings = [], []
+    values = {key: pd.to_numeric(inputs.get(key), errors="coerce") for key in RAW_INPUTS}
+    errors += [f"missing:{key}" for key, v in values.items() if pd.isna(v)]
+    if errors:
+        return errors, warnings
+    inputs = {key: float(v) for key, v in values.items()}
+    errors += [f"category:{key}:{'/'.join(map(str, levels))}" for key, levels in LEVELS.items()
+               if inputs[key] not in levels]
+    if not AGE_RANGE[0] <= inputs["age_years"] <= AGE_RANGE[1]:
+        errors.append(f"range:age_years:{AGE_RANGE[0]}:{AGE_RANGE[1]}")
     ranges = config.CLINICAL_RANGES
     for key in ("ap_hi", "ap_lo", "height", "weight"):
         lo, hi = ranges[key]

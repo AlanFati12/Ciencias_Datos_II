@@ -1,7 +1,7 @@
 {
   "tier": "ecg",
-  "started": "2026-10-27T09:34:38",
-  "finished": "2026-10-27T09:51:16",
+  "started": "2026-10-28T08:16:09",
+  "finished": "2026-10-28T08:31:59",
   "seed": 42,
   "environment": {
     "python": "3.14.7",
@@ -83,10 +83,10 @@
       "grouped_cv": true
     },
     "meta-model weights": {
-      "intercept": -3.398022981408816,
-      "LR": 1.6190051217806056,
+      "intercept": -3.398022981408818,
+      "LR": 1.6190051217805996,
       "KNN": 0.0,
-      "RF": 6.265795050512607,
+      "RF": 6.265795050512618,
       "SVM": 0.0
     },
     "patient-CV fold 1 stacking": {
@@ -105,10 +105,10 @@
       "grouped_cv": true
     },
     "patient-CV fold 1 meta-model weights": {
-      "intercept": -3.500749331503083,
-      "LR": 1.585791419693598,
-      "KNN": 0.049088762984424036,
-      "RF": 6.442538303369531,
+      "intercept": -3.5007493315030827,
+      "LR": 1.5857914196936,
+      "KNN": 0.0490887629844243,
+      "RF": 6.4425383033695285,
       "SVM": 0.0
     },
     "patient-CV fold 2 stacking": {
@@ -127,10 +127,10 @@
       "grouped_cv": true
     },
     "patient-CV fold 2 meta-model weights": {
-      "intercept": -3.415372482039555,
-      "LR": 0.6179503484516568,
+      "intercept": -3.4153724820395537,
+      "LR": 0.6179503484516596,
       "KNN": 0.0,
-      "RF": 7.219484777176931,
+      "RF": 7.219484777176925,
       "SVM": 0.0
     },
     "patient-CV fold 3 stacking": {
@@ -149,8 +149,8 @@
       "grouped_cv": true
     },
     "patient-CV fold 3 meta-model weights": {
-      "intercept": -3.2873335768146656,
-      "LR": 0.3819281106374475,
+      "intercept": -3.287333576814666,
+      "LR": 0.38192811063744736,
       "KNN": 0.0,
       "RF": 7.468598632943624,
       "SVM": 0.0
@@ -171,10 +171,10 @@
       "grouped_cv": true
     },
     "patient-CV fold 4 meta-model weights": {
-      "intercept": -3.1531902097397286,
-      "LR": 1.6498655546818675,
+      "intercept": -3.153190209739729,
+      "LR": 1.6498655546818668,
       "KNN": 0.0,
-      "RF": 5.928240643535361,
+      "RF": 5.928240643535362,
       "SVM": 0.0
     },
     "patient-CV fold 5 stacking": {
@@ -194,10 +194,10 @@
     },
     "patient-CV fold 5 meta-model weights": {
       "intercept": -3.5816607409738976,
-      "LR": 1.942473095898521,
-      "KNN": 0.23499019217731523,
-      "RF": 5.225524899791791,
-      "SVM": 0.808734999380981
+      "LR": 1.9424730958985184,
+      "KNN": 0.2349901921773131,
+      "RF": 5.225524899791786,
+      "SVM": 0.80873499938099
     }
   },
   "lineage": [
@@ -262,23 +262,23 @@
       "tuning_rows": 12000.0
     },
     "training time LR": {
-      "oof_seconds": 2.9379704160000983,
-      "final_fit_seconds": 0.3527317090010911,
+      "oof_seconds": 2.4730395410006167,
+      "final_fit_seconds": 0.31355262500437675,
       "rows_used_final_fit": 52331.0
     },
     "training time KNN": {
-      "oof_seconds": 1.8350829999999405,
-      "final_fit_seconds": 0.03605704199981119,
+      "oof_seconds": 1.9191291669994825,
+      "final_fit_seconds": 0.017887916998006403,
       "rows_used_final_fit": 52331.0
     },
     "training time RF": {
-      "oof_seconds": 53.822454999999536,
-      "final_fit_seconds": 11.104990833000556,
+      "oof_seconds": 46.983268291005515,
+      "final_fit_seconds": 9.590352332998009,
       "rows_used_final_fit": 52331.0
     },
     "training time SVM": {
-      "oof_seconds": 57.226494915999865,
-      "final_fit_seconds": 5.853404749999754,
+      "oof_seconds": 53.491257041998324,
+      "final_fit_seconds": 5.477098249997653,
       "rows_used_final_fit": 20000.0
     },
     "Logistic Regression": {
@@ -387,7 +387,7 @@
       "roc_auc": 0.9950273212576168,
       "pr_auc": 0.9948696178689922,
       "mcc": 0.9375900053741802,
-      "brier": 0.024669347138615884,
+      "brier": 0.024669347138615867,
       "tp": 6414.0,
       "fp": 283.0,
       "tn": 6259.0,
@@ -410,103 +410,103 @@
       "patients_in_test": 121.0
     },
     "patient-CV fold 1 training time LR": {
-      "oof_seconds": 2.2738145839994104,
-      "final_fit_seconds": 0.2797707909994642,
+      "oof_seconds": 2.1366860829948564,
+      "final_fit_seconds": 0.2616374999997788,
       "rows_used_final_fit": 52658.0
     },
     "patient-CV fold 1 training time KNN": {
-      "oof_seconds": 1.598009916000592,
-      "final_fit_seconds": 0.018727667000348447,
+      "oof_seconds": 2.1191922920043,
+      "final_fit_seconds": 0.015217542000755202,
       "rows_used_final_fit": 52658.0
     },
     "patient-CV fold 1 training time RF": {
-      "oof_seconds": 51.18332724999891,
-      "final_fit_seconds": 10.742509167001117,
+      "oof_seconds": 46.60542262499803,
+      "final_fit_seconds": 9.620628208002017,
       "rows_used_final_fit": 52658.0
     },
     "patient-CV fold 1 training time SVM": {
-      "oof_seconds": 50.532436208000945,
-      "final_fit_seconds": 5.055533374999868,
+      "oof_seconds": 48.17263250000542,
+      "final_fit_seconds": 4.75674550000258,
       "rows_used_final_fit": 20000.0
     },
     "patient-CV fold 2 training time LR": {
-      "oof_seconds": 2.091471666999496,
-      "final_fit_seconds": 0.2976850420000119,
+      "oof_seconds": 1.955469833999814,
+      "final_fit_seconds": 0.27505795800243504,
       "rows_used_final_fit": 53072.0
     },
     "patient-CV fold 2 training time KNN": {
-      "oof_seconds": 1.6676581669998995,
-      "final_fit_seconds": 0.026347625000198605,
+      "oof_seconds": 2.161458542002947,
+      "final_fit_seconds": 0.01884625000093365,
       "rows_used_final_fit": 53072.0
     },
     "patient-CV fold 2 training time RF": {
-      "oof_seconds": 51.74080200000026,
-      "final_fit_seconds": 10.874783541999932,
+      "oof_seconds": 45.95995929199853,
+      "final_fit_seconds": 9.563218540999515,
       "rows_used_final_fit": 53072.0
     },
     "patient-CV fold 2 training time SVM": {
-      "oof_seconds": 57.30613679199996,
-      "final_fit_seconds": 5.8392801669997425,
+      "oof_seconds": 54.646407166001154,
+      "final_fit_seconds": 5.581827709000208,
       "rows_used_final_fit": 20000.0
     },
     "patient-CV fold 3 training time LR": {
-      "oof_seconds": 2.835371417000715,
-      "final_fit_seconds": 0.5171251659994596,
+      "oof_seconds": 2.652947499998845,
+      "final_fit_seconds": 0.4838380830042297,
       "rows_used_final_fit": 52512.0
     },
     "patient-CV fold 3 training time KNN": {
-      "oof_seconds": 1.565534375000425,
-      "final_fit_seconds": 0.01806008299899986,
+      "oof_seconds": 2.017945707993931,
+      "final_fit_seconds": 0.01642849999916507,
       "rows_used_final_fit": 52512.0
     },
     "patient-CV fold 3 training time RF": {
-      "oof_seconds": 51.054227415999776,
-      "final_fit_seconds": 10.71478983400084,
+      "oof_seconds": 45.77726120800071,
+      "final_fit_seconds": 9.420353207999142,
       "rows_used_final_fit": 52512.0
     },
     "patient-CV fold 3 training time SVM": {
-      "oof_seconds": 58.23757937500159,
-      "final_fit_seconds": 5.925065542000084,
+      "oof_seconds": 56.47748437499831,
+      "final_fit_seconds": 5.7713319579997915,
       "rows_used_final_fit": 20000.0
     },
     "patient-CV fold 4 training time LR": {
-      "oof_seconds": 2.587864790999447,
-      "final_fit_seconds": 0.5055221659986273,
+      "oof_seconds": 2.5611574580034357,
+      "final_fit_seconds": 0.4956617499992717,
       "rows_used_final_fit": 52556.0
     },
     "patient-CV fold 4 training time KNN": {
-      "oof_seconds": 1.923440833999848,
-      "final_fit_seconds": 0.016197375000047032,
+      "oof_seconds": 2.2371820419939468,
+      "final_fit_seconds": 0.03411437499744352,
       "rows_used_final_fit": 52556.0
     },
     "patient-CV fold 4 training time RF": {
-      "oof_seconds": 44.25527850000071,
-      "final_fit_seconds": 9.088307084000917,
+      "oof_seconds": 45.07906691700191,
+      "final_fit_seconds": 9.337948458000028,
       "rows_used_final_fit": 52556.0
     },
     "patient-CV fold 4 training time SVM": {
-      "oof_seconds": 52.22603833300127,
-      "final_fit_seconds": 5.322885042000053,
+      "oof_seconds": 52.09092058399983,
+      "final_fit_seconds": 5.248193166000419,
       "rows_used_final_fit": 20000.0
     },
     "patient-CV fold 5 training time LR": {
-      "oof_seconds": 1.3426481249989592,
-      "final_fit_seconds": 0.24142720800045936,
+      "oof_seconds": 1.3407455420019687,
+      "final_fit_seconds": 0.2416494999997667,
       "rows_used_final_fit": 50858.0
     },
     "patient-CV fold 5 training time KNN": {
-      "oof_seconds": 2.364477041999635,
-      "final_fit_seconds": 0.017581916999915848,
+      "oof_seconds": 2.5573627080011647,
+      "final_fit_seconds": 0.017861707994597964,
       "rows_used_final_fit": 50858.0
     },
     "patient-CV fold 5 training time RF": {
-      "oof_seconds": 42.375728958000764,
-      "final_fit_seconds": 8.795009540999672,
+      "oof_seconds": 43.42930679100391,
+      "final_fit_seconds": 9.087369834000128,
       "rows_used_final_fit": 50858.0
     },
     "patient-CV fold 5 training time SVM": {
-      "oof_seconds": 48.45661629099959,
-      "final_fit_seconds": 4.984084416999394,
+      "oof_seconds": 48.030829666997306,
+      "final_fit_seconds": 4.944315166998422,
       "rows_used_final_fit": 20000.0
     },
     "patient-wise CV K-Nearest Neighbors": {
@@ -1096,6 +1096,21 @@
       "rows": 11
     },
     {
+      "file": "missing_values.csv",
+      "caption": "Missing and non-finite values per column of the raw data",
+      "rows": 107
+    },
+    {
+      "file": "assumption_tests.csv",
+      "caption": "Normality (D'Agostino-Pearson, per class) and homoscedasticity (Levene) tests",
+      "rows": 10
+    },
+    {
+      "file": "categorical_frequencies.csv",
+      "caption": "Absolute and relative frequency, mode and target rate of each categorical level",
+      "rows": 6
+    },
+    {
       "file": "split_assignment.csv",
       "caption": "Row-level train/test assignment",
       "rows": 65414
@@ -1175,8 +1190,8 @@
     {
       "file": "stacking_ensemble.joblib",
       "description": "StackingEnsemble: 4 tuned base models + logistic meta-model",
-      "sha256": "bd425d60a84680fa3fcb01be81ec1d8ba3327faf1c204c8d15b5315cd7888273",
-      "bytes": 57349147
+      "sha256": "65fe14a62356e074c470409df471b553422931f13aab15d1ea6188f60233a2be",
+      "bytes": 57349242
     }
   ],
   "notes": [

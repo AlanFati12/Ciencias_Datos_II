@@ -1,6 +1,6 @@
 # Results summary — Hito 2
 
-Generated 2026-10-27 14:48 from `outputs/*/run_manifest.json`. Every number below can be traced to its tier's `TRACEABILITY.md`.
+Generated 2026-10-28 08:32 from `outputs/*/run_manifest.json`. Every number below can be traced to its tier's `TRACEABILITY.md`.
 
 ## Tier 1 — clinical risk screening
 
@@ -25,11 +25,11 @@ Generated 2026-10-27 14:48 from `outputs/*/run_manifest.json`. Every number belo
 
 ```json
 {
-  "intercept": -2.7160381860881513,
-  "LR": 1.2528686567635454,
-  "KNN": 0.7796103349404183,
-  "RF": 1.970432764623543,
-  "SVM": 1.549723611382434
+  "intercept": -2.716038186088139,
+  "LR": 1.252868656764017,
+  "KNN": 0.7796103349400931,
+  "RF": 1.970432764623777,
+  "SVM": 1.5497236113820525
 }
 ```
 
@@ -56,10 +56,10 @@ Generated 2026-10-27 14:48 from `outputs/*/run_manifest.json`. Every number belo
 
 ```json
 {
-  "intercept": -3.398022981408816,
-  "LR": 1.6190051217806056,
+  "intercept": -3.398022981408818,
+  "LR": 1.6190051217805996,
   "KNN": 0.0,
-  "RF": 6.265795050512607,
+  "RF": 6.265795050512618,
   "SVM": 0.0
 }
 ```

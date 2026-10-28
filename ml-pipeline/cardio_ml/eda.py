@@ -165,6 +165,66 @@ def vif_table(df: pd.DataFrame, cols: list[str]) -> pd.DataFrame:
     return pd.DataFrame(rows).sort_values("vif", ascending=False)
 
 
+def missing_values_table(df: pd.DataFrame) -> pd.DataFrame:
+    """Missing (NaN) and non-finite (±inf) values per column of the raw data.
+
+    missing_pct = missing / rows. Done on the raw file, before any cleaning, so a gap that hides a
+    pattern (missing not at random, MNAR) would show up here.
+    """
+    num = df.select_dtypes("number")
+    non_finite = pd.Series(0, index=df.columns)
+    non_finite[num.columns] = np.isinf(num.to_numpy(float)).sum(axis=0)
+    out = pd.DataFrame({"dtype": df.dtypes.astype(str), "missing": df.isna().sum(), "non_finite": non_finite})
+    out["missing_pct"] = out["missing"] / len(df)
+    return out.reset_index(names="variable")
+
+
+def assumption_tests(df: pd.DataFrame, cols: list[str], target: str, n: int = 5000, seed: int = 42) -> pd.DataFrame:
+    """Normality and homoscedasticity checks of the numeric variables (week-7 checklist).
+
+    Normality, per class, D'Agostino-Pearson test: K² = Z(g1)² + Z(g2)², where g1 is the skewness
+    E[(x-mu)^3]/sigma^3 and g2 the excess kurtosis E[(x-mu)^4]/sigma^4 - 3; under normality K² ~ chi²(2).
+    Homoscedasticity between classes, Levene test (Brown-Forsythe variant): a one-way ANOVA on
+    |x - median of its class|; p < 0.05 means the classes have different spreads.
+    Up to n rows per class are used, because with tens of thousands of rows any tiny deviation is
+    "significant"; the skewness and kurtosis columns show how large the deviation really is.
+    """
+    from scipy import stats
+    rng = np.random.default_rng(seed)
+    rows = []
+    for col in cols:
+        groups = []
+        row = {"variable": col}
+        for cls in sorted(df[target].unique()):
+            x = df.loc[df[target] == cls, col].dropna().to_numpy(float)
+            x = x if len(x) <= n else rng.choice(x, n, replace=False)
+            groups.append(x)
+            row[f"skew_{cls}"] = stats.skew(x)
+            row[f"kurtosis_{cls}"] = stats.kurtosis(x)
+            row[f"normal_p_{cls}"] = stats.normaltest(x).pvalue if np.ptp(x) > 0 else np.nan
+        row["levene_p"] = stats.levene(*groups, center="median").pvalue
+        row["normal_all_classes"] = bool(all(row[f"normal_p_{c}"] > 0.05 for c in sorted(df[target].unique())))
+        row["equal_variances"] = bool(row["levene_p"] > 0.05)
+        rows.append(row)
+    return pd.DataFrame(rows)
+
+
+def frequency_table(df: pd.DataFrame, cols: list[str], target: str) -> pd.DataFrame:
+    """Absolute and relative frequency of every level of the categorical variables, its mode and target rate.
+
+    relative frequency = count / rows; the mode is the most frequent level; target_rate is the share of
+    positive cases (CVD or abnormal beat) inside that level.
+    """
+    rows = []
+    for col in cols:
+        counts = df[col].value_counts()
+        rates = df.groupby(col)[target].mean()
+        for level, count in counts.sort_index().items():
+            rows.append({"variable": col, "level": level, "count": int(count), "relative_freq": count / len(df),
+                         "is_mode": level == counts.idxmax(), "target_rate": rates[level]})
+    return pd.DataFrame(rows)
+
+
 def plot_vif(vif: pd.DataFrame):
     """Figure - VIF per variable: green < 5 (fine), yellow 5-10 (moderate), red > 10 (severe)."""
     fig, ax = plt.subplots(figsize=(7, 0.35 * len(vif) + 1))

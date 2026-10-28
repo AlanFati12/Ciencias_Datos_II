@@ -21,6 +21,13 @@ MIN_SECONDS = 20
 MIN_PEAK_PROMINENCE = 2.0      # below this the detected "peaks" do not stand out at all
 DOUBT_PEAK_PROMINENCE = 6.0    # moderate peaks are only accepted when the beats look alike
 MIN_BEAT_SIMILARITY = 0.5
+MAX_MISSING = 0.02             # share of empty / non-numeric samples that can be interpolated
+# Training beats measured 0.06-9.6 mV; a median beat outside these limits means the wrong units were chosen
+# (an ECG in microvolts read as millivolts is 1000 times larger).
+AMPLITUDE_RANGE_MV = (0.03, 15.0)
+# Real segments of the training databases had 36-208 bpm; a heart rate outside this range means the samples per
+# second do not match the file (a 128 Hz file read at 360 Hz gives ~2.8 times the real rate).
+HEART_RATE_RANGE = (30, 220)
 
 
 def demo_catalog() -> list[dict]:
@@ -68,11 +75,28 @@ def signal_quality(beats: pd.DataFrame, clean: np.ndarray, peaks: np.ndarray, fs
     return {"peak_prominence": prominence, "beat_similarity": similarity, "is_ecg": is_ecg}
 
 
+def check_beats(beats: pd.DataFrame) -> None:
+    """Units and sampling-rate checks on the detected beats (raise ValueError with the reason)."""
+    amplitude = float(beats["amplitude_mv"].median())
+    if amplitude > AMPLITUDE_RANGE_MV[1]:
+        raise ValueError("units_uv")
+    if amplitude < AMPLITUDE_RANGE_MV[0]:
+        raise ValueError("units_small")
+    heart_rate = 60 / float(beats["pre_rr"].median())
+    if not HEART_RATE_RANGE[0] <= heart_rate <= HEART_RATE_RANGE[1]:
+        raise ValueError("heart_rate")
+
+
 def analyze(tier: Tier, signal: np.ndarray, fs: float) -> dict:
-    """Detect the beats, check that the signal is an ECG, build the features and classify the beats."""
+    """Check the signal, detect the beats, check that it is an ECG, build the features and classify the beats."""
     signal = np.asarray(signal, dtype=float)
     if len(signal) / fs < MIN_SECONDS:
         raise ValueError("too_short")
+    missing = ~np.isfinite(signal)
+    if missing.mean() > MAX_MISSING:
+        raise ValueError("missing")
+    if missing.any():                    # a few empty cells: fill them from their neighbours
+        signal = pd.Series(np.where(missing, np.nan, signal)).interpolate(limit_direction="both").to_numpy()
     extractor = BeatExtractor()
     beats, clean, peaks = extractor.extract_signal(signal, fs)
     if len(beats) < 5:
@@ -80,6 +104,7 @@ def analyze(tier: Tier, signal: np.ndarray, fs: float) -> dict:
     quality = signal_quality(beats, clean, peaks, fs, extractor.fs_target)
     if not quality["is_ecg"]:
         raise ValueError("not_ecg")
+    check_beats(beats)
     lo, hi = tier.schema.get("rr_valid_range_s", (0.2, 3.0))
     prior = tier.schema.get("deployment_prior")
     valid = beats["pre_rr"].between(lo, hi) & beats["post_rr"].between(lo, hi)

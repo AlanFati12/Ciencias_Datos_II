@@ -43,14 +43,14 @@ The interface is built for a health professional with no machine-learning backgr
 
 ## How to run it
 
-The models must exist first (they are not versioned because of their size):
+The trained models are included in the repository (`ml-pipeline/outputs/*/models`). To train them again:
 
 ```bash
 cd ml-pipeline
 python main.py            # writes outputs/clinical/models and outputs/ecg/models
 ```
 
-Then:
+To run the application (tested with Python 3.14):
 
 ```bash
 cd web-app
@@ -58,10 +58,30 @@ python -m venv .venv
 source .venv/bin/activate          # Windows: .venv\Scripts\activate
 pip install -r requirements.txt
 streamlit run app.py               # opens http://localhost:8501
+python -m pytest                   # automated tests of the validations and the models (a few seconds)
 ```
 
-`scikit-learn` is pinned to the version that trained the models, because pickled models only load
-reliably with the same version. If you change it, re-run the pipeline.
+All versions are pinned. `scikit-learn` in particular must be the version that trained the models, because
+pickled models only load reliably with the same version. If you change it, re-run the pipeline.
+
+## Input validation
+
+The models only see data they can interpret. Before predicting, the application checks:
+
+| Input | Check | Message when it fails |
+|---|---|---|
+| Patient data (form or CSV) | Empty cells or text where a number is expected | which field is missing |
+| | Categories outside the dataset's codes (sex 1/2, cholesterol and glucose 1–3, habits 0/1) | the allowed values |
+| | Age 18–100, blood pressure, height, weight and BMI inside physiological ranges; systolic > diastolic | the valid range |
+| | Age outside 40–65 (the training population) | warning: less reliable estimate |
+| CSV of several patients | Missing columns, empty file, column names with spaces or capitals | which columns are missing |
+| ECG | At least 20 seconds; at most 2 % empty values (a few are interpolated) | too short / too many empty values |
+| | It must look like an ECG (prominent peaks and beats that look alike) | the signal is not an ECG |
+| | Median beat between 0.03 and 15 mV (training beats: 0.06–9.6 mV) | wrong units (µV vs. mV) |
+| | Heart rate between 30 and 220 bpm | wrong samples per second |
+
+A sampling rate that is wrong by a small factor (e.g. 250 Hz read as 360 Hz) still gives a possible heart rate
+and cannot be detected; the samples per second must be checked by the user.
 
 ## Structure
 
@@ -71,7 +91,7 @@ web-app/
 ├── core/                  # logic without UI + the shared visual components
 │   ├── model_store.py     # loads ../ml-pipeline/outputs/<tier>/models (+ the cardio_ml package)
 │   ├── clinical.py        # validation, prediction, risk levels, local explanation, what-if sweeps
-│   ├── ecg.py             # signal reading, beat detection + classification, rhythm summary
+│   ├── ecg.py             # signal checks (is it an ECG? units? sampling rate?), beat classification, rhythm summary
 │   ├── storage.py         # SQLite history (data/history.db, not versioned)
 │   ├── report_pdf.py      # PDF reports (fpdf2)
 │   ├── theme.py           # design tokens + the 'cardioai' Plotly template (colour-blind-safe palette)
@@ -82,6 +102,7 @@ web-app/
 ├── views/                 # home, risk, ecg_analysis, history, batch, how_it_works
 ├── assets/                # logo and icon (SVG)
 ├── sample_data/           # demo ECG excerpts and batch CSV examples
+├── tests/                 # automated tests (pytest): input validation, ECG checks, clinical behaviour
 └── .streamlit/config.toml # theme (colours, Inter font, radii)
 ```
 

@@ -1,7 +1,7 @@
 {
   "tier": "clinical",
-  "started": "2026-10-27T09:30:16",
-  "finished": "2026-10-27T09:34:34",
+  "started": "2026-10-28T08:11:50",
+  "finished": "2026-10-28T08:16:05",
   "seed": 42,
   "environment": {
     "python": "3.14.7",
@@ -70,11 +70,11 @@
       "grouped_cv": false
     },
     "meta-model weights": {
-      "intercept": -2.7160381860881513,
-      "LR": 1.2528686567635454,
-      "KNN": 0.7796103349404183,
-      "RF": 1.970432764623543,
-      "SVM": 1.549723611382434
+      "intercept": -2.716038186088139,
+      "LR": 1.252868656764017,
+      "KNN": 0.7796103349400931,
+      "RF": 1.970432764623777,
+      "SVM": 1.5497236113820525
     },
     "clinical monotonic constraints": {
       "age_years": 1,
@@ -216,23 +216,23 @@
       "tuning_rows": 12000.0
     },
     "training time LR": {
-      "oof_seconds": 0.11730962500041642,
-      "final_fit_seconds": 0.02174333299990394,
+      "oof_seconds": 0.1038676249954733,
+      "final_fit_seconds": 0.019679625002027024,
       "rows_used_final_fit": 54217.0
     },
     "training time KNN": {
-      "oof_seconds": 11.112822708999374,
-      "final_fit_seconds": 0.013855167000656365,
+      "oof_seconds": 10.543199750005442,
+      "final_fit_seconds": 0.013765042000159156,
       "rows_used_final_fit": 54217.0
     },
     "training time RF": {
-      "oof_seconds": 5.386925999999221,
-      "final_fit_seconds": 1.0313698329991894,
+      "oof_seconds": 4.927418791005039,
+      "final_fit_seconds": 0.9140477920009289,
       "rows_used_final_fit": 54217.0
     },
     "training time SVM": {
-      "oof_seconds": 68.40941050000038,
-      "final_fit_seconds": 7.225496459001079,
+      "oof_seconds": 66.85684920800122,
+      "final_fit_seconds": 6.8962343750026776,
       "rows_used_final_fit": 20000.0
     },
     "Logistic Regression": {
@@ -325,7 +325,7 @@
       "roc_auc": 0.7930584580576528,
       "pr_auc": 0.7701382743430041,
       "mcc": 0.4544841822088521,
-      "brier": 0.18646222605181026,
+      "brier": 0.18646222605181023,
       "tp": 4403.0,
       "fp": 1358.0,
       "tn": 5420.0,
@@ -339,9 +339,9 @@
       "specificity": 0.7882856299793449,
       "f1": 0.7065679634588125,
       "roc_auc": 0.7930719119957444,
-      "pr_auc": 0.7696608620585355,
+      "pr_auc": 0.7696608705780019,
       "mcc": 0.45386926484900164,
-      "brier": 0.18519879333174347,
+      "brier": 0.18519879333174338,
       "tp": 4486.0,
       "fp": 1435.0,
       "tn": 5343.0,
@@ -982,6 +982,21 @@
       "rows": 16
     },
     {
+      "file": "missing_values.csv",
+      "caption": "Missing and non-finite values per column of the raw data",
+      "rows": 13
+    },
+    {
+      "file": "assumption_tests.csv",
+      "caption": "Normality (D'Agostino-Pearson, per class) and homoscedasticity (Levene) tests",
+      "rows": 6
+    },
+    {
+      "file": "categorical_frequencies.csv",
+      "caption": "Absolute and relative frequency, mode and target rate of each categorical level",
+      "rows": 19
+    },
+    {
       "file": "split_assignment.csv",
       "caption": "Row-level train/test assignment",
       "rows": 67772
@@ -1061,14 +1076,14 @@
     {
       "file": "stacking_ensemble.joblib",
       "description": "StackingEnsemble: 4 tuned base models + logistic meta-model",
-      "sha256": "b2173379b12b4ac1dfa133410967352c13496c93c7410171095b2620ee768fcf",
-      "bytes": 7967721
+      "sha256": "5f12747c08471b0c67d75dce3899746cc8c5c5217e6074c01cfe473f1ffcafca",
+      "bytes": 7967747
     },
     {
       "file": "risk_segmenter.joblib",
       "description": "RiskSegmenter: PCA + K-means (k = 3) -> Low / Medium / High risk",
-      "sha256": "ae5e11b396dc4857cf08875f2cd23dfe09e248d0c469534350cb7e4d93466f74",
-      "bytes": 23761
+      "sha256": "9987e1eabb402bbb5f587c5b531cbfaef97c8d1ef8489f5d7c9f2a83d5776baa",
+      "bytes": 23756
     }
   ],
   "notes": [

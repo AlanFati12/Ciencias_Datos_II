@@ -145,6 +145,10 @@ T: dict[str, dict[str, str]] = {
                             "en": "The systolic pressure (upper) must be higher than the diastolic (lower)."},
     "risk.error.bmi": {"es": "El IMC ({bmi}) no es plausible. Revisa la estatura y el peso.",
                        "en": "The BMI ({bmi}) is not plausible. Check height and weight."},
+    "risk.error.missing": {"es": "Falta el dato «{field}» o no es un número.",
+                           "en": "«{field}» is empty or is not a number."},
+    "risk.error.category": {"es": "«{field}» solo puede tomar los valores {levels}.",
+                            "en": "«{field}» can only take the values {levels}."},
     "risk.warning.age_extrapolation": {
         "es": "El modelo aprendió con personas de <b>40 a 65 años</b>. Para otras edades el resultado es menos confiable.",
         "en": "The model learned from people aged <b>40 to 65</b>. For other ages the result is less reliable."},
@@ -264,6 +268,21 @@ T: dict[str, dict[str, str]] = {
                             "en": "The signal is too short: at least 20 seconds are needed."},
     "ecg.error.no_beats": {"es": "Se encontraron muy pocos latidos. Revisa la columna, las unidades y las muestras por segundo.",
                            "en": "Too few heartbeats were found. Check the column, the units and the samples per second."},
+    "ecg.error.missing": {"es": "Más del 2 % de los valores de la señal están vacíos o no son números. Revisa la columna elegida.",
+                          "en": "More than 2 % of the signal values are empty or not numbers. Check the chosen column."},
+    "ecg.error.units_uv": {"es": "Los latidos miden más de 15 mV, algo imposible en un ECG: la señal parece estar en "
+                                 "microvoltios. Cambia las unidades a µV.",
+                           "en": "The beats measure more than 15 mV, which is impossible in an ECG: the signal seems to "
+                                 "be in microvolts. Change the units to µV."},
+    "ecg.error.units_small": {"es": "Los latidos miden menos de 0,03 mV, demasiado poco para un ECG: revisa las unidades "
+                                    "(si el archivo está en milivoltios, elige mV).",
+                              "en": "The beats measure less than 0.03 mV, too little for an ECG: check the units (if the "
+                                    "file is in millivolts, choose mV)."},
+    "ecg.error.heart_rate": {"es": "La frecuencia cardiaca calculada no es posible (menos de 30 o más de 220 latidos por "
+                                   "minuto). Lo más probable es que las muestras por segundo no correspondan al archivo: "
+                                   "revisa ese valor.",
+                             "en": "The calculated heart rate is not possible (below 30 or above 220 beats per minute). "
+                                   "Most likely the samples per second do not match the file: check that value."},
     "ecg.error.not_ecg": {"es": "La señal no parece un electrocardiograma: no tiene picos de latido marcados y las formas "
                                 "encontradas no se parecen entre sí. Revisa que elegiste la columna correcta, las unidades "
                                 "y las muestras por segundo.",
@@ -412,8 +431,10 @@ T: dict[str, dict[str, str]] = {
     "batch.example_help": {"es": "Pacientes reales del conjunto de prueba, que el modelo no usó para aprender.",
                            "en": "Real patients from the test set, not used by the model to learn."},
     "batch.missing": {"es": "Al archivo le faltan estas columnas: {cols}", "en": "The file is missing these columns: {cols}"},
+    "batch.empty": {"es": "El archivo no tiene filas de pacientes.", "en": "The file has no patient rows."},
     "batch.summary": {"es": "Se evaluaron <b>{n}</b> pacientes.", "en": "<b>{n}</b> patients were assessed."},
-    "batch.rejected": {"es": "{n} fila(s) no se evaluaron por tener datos imposibles", "en": "{n} row(s) were not assessed because of impossible data"},
+    "batch.rejected": {"es": "{n} fila(s) no se evaluaron por tener datos faltantes o imposibles",
+                      "en": "{n} row(s) were not assessed because of missing or impossible data"},
     "batch.running": {"es": "Evaluando pacientes…", "en": "Assessing patients…"},
     "batch.col_patient": {"es": "Paciente", "en": "Patient"},
     "batch.col_age": {"es": "Edad", "en": "Age"},
@@ -669,7 +690,9 @@ T: dict[str, dict[str, str]] = {
     "home.start_here": {"es": "Elige una herramienta", "en": "Choose a tool"},
 }
 
-FIELDS = {"ap_hi": "in.ap_hi", "ap_lo": "in.ap_lo", "height": "in.height", "weight": "in.weight"}
+FIELDS = {"ap_hi": "in.ap_hi", "ap_lo": "in.ap_lo", "height": "in.height", "weight": "in.weight",
+          "age_years": "in.age", "gender": "in.sex", "cholesterol": "in.cholesterol", "gluc": "in.glucose",
+          "smoke": "in.smoke", "alco": "in.alcohol", "active": "in.active"}
 
 
 def lang() -> str:
@@ -732,4 +755,9 @@ def validation_message(code: str) -> str:
         return t("risk.error.range", field=t(FIELDS[key]), lo=lo, hi=hi)
     if kind == "bmi":
         return t("risk.error.bmi", bmi=rest[0])
+    if kind == "missing":
+        return t("risk.error.missing", field=t(FIELDS[rest[0]]))
+    if kind == "category":
+        key, levels = rest
+        return t("risk.error.category", field=t(FIELDS[key]), levels=levels.replace("/", ", "))
     return t("risk.error." + kind)

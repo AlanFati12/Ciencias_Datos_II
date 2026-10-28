@@ -1,0 +1,8 @@
+"""Shared test setup: import the cardio_ml package from ml-pipeline/ and draw figures off-screen."""
+import sys
+from pathlib import Path
+
+import matplotlib
+
+matplotlib.use("Agg")
+sys.path.insert(0, str(Path(__file__).resolve().parents[1]))

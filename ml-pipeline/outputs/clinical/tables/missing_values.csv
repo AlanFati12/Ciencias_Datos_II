@@ -1,0 +1,14 @@
+variable,dtype,missing,non_finite,missing_pct
+id,int64,0,0,0.0
+age,int64,0,0,0.0
+gender,int64,0,0,0.0
+height,int64,0,0,0.0
+weight,float64,0,0,0.0
+ap_hi,int64,0,0,0.0
+ap_lo,int64,0,0,0.0
+cholesterol,int64,0,0,0.0
+gluc,int64,0,0,0.0
+smoke,int64,0,0,0.0
+alco,int64,0,0,0.0
+active,int64,0,0,0.0
+cardio,int64,0,0,0.0

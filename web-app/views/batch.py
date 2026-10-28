@@ -39,8 +39,13 @@ elif use_example:
 else:
     st.stop()
 
+raw.columns = [str(c).strip().lower() for c in raw.columns]    # " Ap_Hi" and "ap_hi" are the same column
+if raw.dropna(how="all").empty:
+    st.error(t("batch.empty"))
+    st.stop()
 if "age_years" not in raw.columns and "age" in raw.columns:      # original Kaggle format (age in days)
-    raw["age_years"] = raw["age"] / 365.25 if raw["age"].median() > 200 else raw["age"]
+    age = pd.to_numeric(raw["age"], errors="coerce")
+    raw["age_years"] = age / 365.25 if age.median() > 200 else age
 missing = [c for c in clinical.RAW_INPUTS if c not in raw.columns]
 if missing:
     st.error(t("batch.missing", cols=", ".join(missing)))
@@ -51,8 +56,9 @@ problems = []
 for i, row in raw[clinical.RAW_INPUTS].iterrows():
     errors, _ = clinical.validate(row.to_dict())
     if errors:
-        problems.append({"#": i + 1, "": "; ".join(validation_message(e) for e in errors)})
+        problems.append({"#": i + 1, "": " ".join(validation_message(e) for e in errors)})
 valid = raw.drop(index=[p["#"] - 1 for p in problems]).reset_index(drop=True)
+valid[clinical.RAW_INPUTS] = valid[clinical.RAW_INPUTS].apply(pd.to_numeric)   # "120" -> 120 (already validated)
 if valid.empty:
     st.error(t("batch.rejected", n=len(problems)))
     st.stop()
